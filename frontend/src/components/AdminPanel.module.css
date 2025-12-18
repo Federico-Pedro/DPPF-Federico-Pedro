@@ -1,0 +1,117 @@
+:root {
+    background-color: var(--night);
+
+}
+
+.adminContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 200px;
+    padding: 25px;
+    background-color: var(--night);
+}
+
+.adminContainer h2 {
+    padding: 15px;
+    width: 100%;
+    text-align: center;
+    color: var(--jasmine);
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+
+}
+.success,
+.error {
+    color: var(--jasmine);
+    font-family: 'Arial', sans-serif;
+    font-size: 1.2rem;
+}
+
+.error {
+    color: rgb(138, 29, 29)
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50vw;
+
+}
+
+.form label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    color: var(--jasmine);
+    font-family: 'Arial', sans-serif;
+    font-size: 1.2rem;
+}
+
+.form input {
+    margin-top: 20px;
+    width: 50%;
+}
+
+textarea {
+    height: 250px;
+    flex: 1;
+    min-width: 50%;
+    max-width: 600px;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    outline: none;
+    background: var(--black-olive);
+    padding: 0.75rem 1.5rem;
+    margin-top: 20px;
+    box-sizing: border-box;
+    box-shadow: none;
+    appearance: none;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--olive);
+}
+
+
+textarea:focus {
+    outline: none;
+    border: 2px solid var(--raw-umber);
+    ;
+}
+
+.imagePreview {
+    display: flex;
+}
+.productImage {
+    width: 100px; 
+    height: 100px;
+    object-fit: cover;
+    margin: 10px; 
+    border-radius: 8px;
+}
+
+.button {
+    background: var(--black-olive);
+    font-size: 1rem;
+    color: var(--olive);
+    margin: 1rem;
+    padding: 0.75rem 2rem;
+    height: 45px;
+    width: 200px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.button:hover {
+    background: var(--olive);
+    color: var(--black-olive);
+}

@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'rustic';
+  src: url('/SeaweedScript-Regular.ttf');
+  font-weight: bold;
+}
+
+:root {
+ 
+
+  --night: rgb(26, 23, 21);
+  --black-olive: #292B1Cff;
+  --bistre: #462922ff;
+  --kobicha: #613A21ff;
+  --raw-umber: #986C58ff;
+  --dark-umber: rgba(152, 108, 88, 0.4);
+  --persian-orange: #C08B63ff;
+  --dark-moss-green: #384E06ff;
+  --olive: #938237ff;
+  --jasmine: #EDD07Cff;
+  --ghost-white: #F7F8FCff;
+}
+
+* {
+  overflow-x: hidden;
+}

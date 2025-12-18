@@ -1,0 +1,73 @@
+.cardContainer {
+    min-height: 65vh;
+    padding: 50px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    margin-top: 10px;
+    overflow: hidden;
+    gap: 25px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 35vw;
+    height: 400px;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    padding: 15px 30px 15px 30px;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.card:hover {
+    box-shadow: 0 2px 10px var(--jasmine);
+}
+
+.imageContainer {
+    width: 500px;
+    height: 309px;
+    overflow: hidden;
+    
+    /* border: solid red 1px */
+}
+.cardImage {
+    height: 90%;
+    width: 100%;
+    object-fit:cover;
+    object-position: center;
+    margin-top: 10px;
+    border-radius: 8px;
+
+}
+.card h3 {
+    font-family: 'rustic';
+    font-size: 2rem;
+    line-height: 30px;
+    height: 30px;
+    margin: 0 0 10px 0;
+    padding: 10px 0 10px 0;
+    color: var(--olive);
+    overflow: hidden;
+    
+}
+
+.pContainer {
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+    
+}
+
+.card p {
+    font-family: 'Roboto';
+    font-size: 1.1rem;
+    margin: 15px 0 0px 0;
+    text-align: center;
+    padding: 0 0 20px 0;
+    color: var(--olive);
+    overflow: hidden;
+}
