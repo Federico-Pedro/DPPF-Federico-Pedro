@@ -8,7 +8,7 @@
 
 ## *PALETA*
 
-![Paleta de colores](../frontend/public/paleta.png)
+![Paleta de colores](/frontend/public/paleta.png)
 
 
 ---
@@ -16,7 +16,7 @@
 ## *LOGO DE LA MARCA*
 
 
-<img src="../frontend/public/logo.png" alt="Texto alternativo" width="500">
+<img src="/frontend/public/logo.png" alt="Texto alternativo" width="500">
 
 
 ---
