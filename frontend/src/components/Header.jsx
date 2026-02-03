@@ -14,7 +14,7 @@ function Header() {
         </div>
         </div>
         <nav className={styles.nav}>
-          <Link to="/admin" className={styles.link}>Admin</Link>
+          <Link to="/administracion" className={styles.link}>Admin</Link>
           <a href="#create" className={styles.link}>Crear cuenta</a>
           <a href="#login" className={styles.link}>Iniciar sesión</a>
           

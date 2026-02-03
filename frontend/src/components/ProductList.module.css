@@ -1,3 +1,11 @@
+.body{
+    display: flex;
+    flex-direction: column;
+    
+    
+}
+
+
 .cardContainer {
     min-height: 65vh;
     padding: 50px 0;
@@ -7,6 +15,17 @@
     margin-top: 10px;
     overflow: hidden;
     gap: 25px;
+    
+}
+
+.productLink {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.5s ease;
+    height: fit-content;
+}
+.productLink:hover{
+    box-shadow: 0 2px 10px var(--jasmine);
 }
 
 .card {
@@ -20,12 +39,8 @@
     border-radius: 8px;
     padding: 15px 30px 15px 30px;
     overflow: hidden;
-    transition: all 0.5s ease;
 }
 
-.card:hover {
-    box-shadow: 0 2px 10px var(--jasmine);
-}
 
 .imageContainer {
     width: 500px;
@@ -70,4 +85,62 @@
     padding: 0 0 20px 0;
     color: var(--olive);
     overflow: hidden;
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+        
+}
+
+.paginationButton {
+    padding: 0.5rem 1rem;
+    background: var(--raw-umber);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.paginationButton:hover:not(:disabled) {
+    background: var(--olive);
+    transform: translateY(-2px);
+}
+
+.paginationButton:disabled {
+    background: #666;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pageNumbers {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pageButton {
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--raw-umber);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pageButton:hover {
+    background: var(--raw-umber);
+}
+
+.activePage {
+    padding: 0.5rem 0.75rem;
+    background: var(--raw-umber);
+    color: white;
+    border: 1px solid var(--raw-umber);
+    border-radius: 4px;
+    font-weight: bold;
 }

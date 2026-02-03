@@ -29,6 +29,9 @@
     font-size: 1.2rem;
 }
 
+.success {
+    color: rgb(10, 116, 27)
+}
 .error {
     color: rgb(138, 29, 29)
 }

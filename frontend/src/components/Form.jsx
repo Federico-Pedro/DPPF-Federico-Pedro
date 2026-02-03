@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
-import styles from './AdminPanel.module.css'
+import styles from './Form.module.css'
 
-function AdminPanel() {
+function CreateProduct() {
 
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
@@ -138,4 +138,4 @@ const handleSubmit = async (e) => {
     )
 }
 
-export default AdminPanel
+export default CreateProduct
