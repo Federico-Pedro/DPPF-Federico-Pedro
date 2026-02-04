@@ -2,6 +2,7 @@ import styles from './ProductGallery.module.css'
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 
@@ -31,15 +32,26 @@ const ProductGallery = () => {
 
     return (
         <div className={styles.imageContainer}>
-            {product.images && product.images.length > 0 && product.images.map((image, index) => (
-                <img
-                    key={index}
-                    src={image}
-                    alt={`Product image ${index + 1}`}
-                    className={index === 0 ? styles.mainImage : styles.smallImage}
-                />
-            ))
-            }
+            <div className={styles.backContainer}>
+
+            <Link
+                to={`/product/${product.id}`}
+                className={styles.productLink}
+                >
+                <img className={styles.back} src="/public/arrow.png" alt="back" />
+            </Link>
+                </div>
+            <div>
+                {product.images && product.images.length > 0 && product.images.map((image, index) => (
+                    <img
+                        key={index}
+                        src={image}
+                        alt={`Product image ${index + 1}`}
+                        className={index === 0 ? styles.mainImage : styles.smallImage}
+                    />
+                ))
+                }
+            </div>
         </div>
     )
 };

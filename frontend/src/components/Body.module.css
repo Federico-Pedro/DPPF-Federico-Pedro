@@ -129,6 +129,7 @@ input:-webkit-autofill {
     overflow: hidden;
     margin: 50px;
 }
+
 .specialTitleContainer {
     display: flex;
     flex-direction: column;
@@ -147,7 +148,7 @@ input:-webkit-autofill {
     margin: 0;
 }
 
-.specialCardContainer{
+.specialCardContainer {
     gap: 2rem;
     padding: 15px;
     display: flex;
@@ -157,6 +158,9 @@ input:-webkit-autofill {
 }
 
 .specialCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 500px;
     height: 309px;
     border: 1px solid var(--jasmine);
@@ -167,12 +171,16 @@ input:-webkit-autofill {
     transition: all 0.5s ease;
 }
 
-.specialCard img {
+.cardImage {
     opacity: 1;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .specialCard:hover {
-    cursor:pointer;
+    cursor: pointer;
     box-shadow: 0 2px 10px var(--jasmine);
 }
 

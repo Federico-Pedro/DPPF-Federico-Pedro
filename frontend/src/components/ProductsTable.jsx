@@ -8,6 +8,8 @@ function ProductsTable() {
 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null) 
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -24,6 +26,42 @@ function ProductsTable() {
 
         fetchProducts();
     }, []);
+
+    const handleClick = (product) => {
+        setShowModal(true);
+        setProductToDelete(product)
+        console.log(product)        
+    }
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/products/${productToDelete.id}`);
+            setShowModal(false)
+            setProductToDelete(null)
+            setProducts(products.filter(p => p.id !== productToDelete.id));
+        }
+        catch (error){
+            console.error("Se produjo un error: ", error)
+        }
+    }
+
+    const cancelDelete = () => {
+        setShowModal(false);
+        setProductToDelete(null)  
+    }
+
+    if (showModal) {
+        return (
+            <div style={{ textAlign: 'center', padding: '200px', color: 'white' }}>
+                <h2>¿Está seguro que desea eliminar el producto: {productToDelete.name}?</h2>
+                <img style={{width: '250px', heigh: 'auto', margin: '25px' }} src={productToDelete.images[0]}/>
+                <div>
+                    <button className={styles.editButton} onClick={() => confirmDelete()}>Eliminar</button>
+                    <button className={styles.editButton} onClick={() => cancelDelete()}>Cancelar</button>
+                </div>
+            </div>
+        )
+    }
 
     if (loading) {
         return (
@@ -52,7 +90,7 @@ function ProductsTable() {
                             <td className={styles.cell}>{product.name}</td>
                             <td className={styles.buttonCell}>
                                 <button className={styles.editButton}>Editar</button>
-                                <button className={styles.deleteButton}>Borrar</button>
+                                <button className={styles.deleteButton} onClick={() => handleClick(product)}>Borrar</button>
                             </td>
                         </tr>
                     ))}
