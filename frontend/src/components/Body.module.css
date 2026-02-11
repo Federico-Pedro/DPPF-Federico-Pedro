@@ -17,7 +17,7 @@
     align-items: stretch;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"], input[type="email"] {
     height: 45px;
     flex: 1;
     min-width: 300px;
@@ -32,13 +32,14 @@ input[type="text"] {
     font-family: inherit;
     font-size: 1rem;
     color: var(--olive);
+    
 }
 
 
-input[type="text"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     outline: none;
     border: 2px solid var(--raw-umber);
-    ;
+    
 }
 
 input:-webkit-autofill {

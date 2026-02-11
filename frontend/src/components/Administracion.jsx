@@ -32,7 +32,7 @@ const Administracion = () => {
   return (
     <div className={styles.adminContainer}>
       <Link to="/form" className={styles.adminButon}>Cargar un producto</Link>
-      <Link to="/editar" className={styles.adminButon}>Editar producto</Link>
+      <Link to="/edit" className={styles.adminButon}>Editar producto</Link>
       <Link to="/eliminar" className={styles.adminButon}>Eliminar producto</Link>
       <Link to="/table" className={styles.adminButon}>Ver todos los productos</Link>
     </div>

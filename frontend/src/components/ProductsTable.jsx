@@ -9,7 +9,7 @@ function ProductsTable() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null) 
+    const [productToDelete, setProductToDelete] = useState(null)
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -30,7 +30,7 @@ function ProductsTable() {
     const handleClick = (product) => {
         setShowModal(true);
         setProductToDelete(product)
-        console.log(product)        
+        console.log(product)
     }
 
     const confirmDelete = async () => {
@@ -40,21 +40,22 @@ function ProductsTable() {
             setProductToDelete(null)
             setProducts(products.filter(p => p.id !== productToDelete.id));
         }
-        catch (error){
+        catch (error) {
             console.error("Se produjo un error: ", error)
         }
     }
 
     const cancelDelete = () => {
         setShowModal(false);
-        setProductToDelete(null)  
+        setProductToDelete(null)
     }
+
 
     if (showModal) {
         return (
             <div style={{ textAlign: 'center', padding: '200px', color: 'white' }}>
                 <h2>¿Está seguro que desea eliminar el producto: {productToDelete.name}?</h2>
-                <img style={{width: '250px', heigh: 'auto', margin: '25px' }} src={productToDelete.images[0]}/>
+                <img style={{ width: '250px', heigh: 'auto', margin: '25px' }} src={productToDelete.images[0]} />
                 <div>
                     <button className={styles.editButton} onClick={() => confirmDelete()}>Eliminar</button>
                     <button className={styles.editButton} onClick={() => cancelDelete()}>Cancelar</button>
@@ -80,6 +81,7 @@ function ProductsTable() {
                     <tr>
                         <th className={styles.th}>ID</th>
                         <th className={styles.th}>Nombre</th>
+                        <th className={styles.th}>Categoría</th>
                         <th className={styles.th}>Acciones</th>
                     </tr>
                 </thead>
@@ -88,8 +90,11 @@ function ProductsTable() {
                         <tr key={product.id}>
                             <td className={styles.cell}>{product.id}</td>
                             <td className={styles.cell}>{product.name}</td>
+                            <td className={styles.cell}>{product.category}</td>
                             <td className={styles.buttonCell}>
-                                <button className={styles.editButton}>Editar</button>
+                                <Link to={`/form/edit/${product.id}`} className={styles.adminButon}>
+                                    <button className={styles.editButton}>Editar</button>
+                                </Link>
                                 <button className={styles.deleteButton} onClick={() => handleClick(product)}>Borrar</button>
                             </td>
                         </tr>

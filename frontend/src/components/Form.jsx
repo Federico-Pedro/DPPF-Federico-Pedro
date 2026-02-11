@@ -1,11 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import styles from './Form.module.css'
+import { useParams } from 'react-router-dom';
 
 function CreateProduct() {
 
+    const { id } = useParams();
+
+    const editing = id !== undefined;
+    const [product, setProduct] = useState('')
+    useEffect(() => {
+        if (editing) {
+            axios.get(`http://localhost:8080/api/products/${id}`)
+                .then(response => {
+                    const product = response.data;
+                    setProduct(product)
+                    setProductName(product.name || '');
+                    setDescription(product.description || '');
+                    setProductCategory(product.category || '');
+
+                })
+                .catch(error => {
+                    console.error('Error fetching product:', error);
+                });
+        }
+    }, [id]);
+
+
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
+    const [productCategory, setProductCategory] = useState('')
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -13,63 +37,77 @@ function CreateProduct() {
 
 
     const uploadImages = async (files) => {
-    const formData = new FormData();
-    
-   
-    files.forEach(file => {
-        formData.append('files', file);
-    });
+        const formData = new FormData();
 
-    try {
-        const response = await axios.post('http://localhost:8080/api/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
+
+        files.forEach(file => {
+            formData.append('files', file);
+        });
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            return response.data;
+
+        } catch (error) {
+            console.error('Error uploading images:', error);
+            throw error;
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSuccess('');
+        setError('');
+
+        if (!productName.trim()) {
+            setError('El nombre es obligatorio');
+            return;
+        }
+
+        try {
+            let imageUrls = [];
+            if (selectedFile.length > 0) {
+                imageUrls = await uploadImages(selectedFile)
+            } else if (editing && product?.images) {
+                imageUrls = product.images
             }
-        });
 
-        return response.data;
 
-    } catch (error) {
-        console.error('Error uploading images:', error);
-        throw error;
-    }
-};
+            const productData = {
+                name: productName,
+                description: description,
+                images: imageUrls,
+                category: productCategory
+            }
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccess('');
-    setError('');
+            let response;
 
-    if (!productName.trim()) {
-        setError('El nombre es obligatorio');
-        return;
-    }
+            if (editing) {
+                response = await axios.put(`http://localhost:8080/api/products/${id}`, productData);
+                setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
+            } else {
+                response = await axios.post('http://localhost:8080/api/products', productData);
+                setSuccess(`Producto "${response.data.name}" creado exitosamente!`);
+                setProductName('');
+                setDescription('');
+                setProductCategory('');
+                setSelectedFile([]);
+            }
 
-    try {
-        let imageUrls = [];
-        if (selectedFile.length > 0) {
-            imageUrls = await uploadImages(selectedFile)
-        }
 
-        const response = await axios.post('http://localhost:8080/api/products', {
-            name: productName,
-            description: description,
-            images: imageUrls
-        });
-
-        setSuccess(`Producto "${response.data.name}" creado exitosamente!`);
-        setProductName('');
-        setDescription('');
-        setSelectedFile([]);
-
-    } catch (error) {
-        if (error.response && error.response.data && error.response.data.error) {
-            setError(error.response.data.error);
-        } else {
-            setError('Error al crear el producto. Intenta de nuevo.');
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.error) {
+                setError(error.response.data.error);
+            } else {
+                setError('Error al guardar el producto. Intenta de nuevo.');
+            }
         }
     }
-}
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -83,7 +121,7 @@ const handleSubmit = async (e) => {
     return (
         <div className={styles.adminContainer}>
             <div className={styles.titleContainer}>
-                <h2>Panel de Administración</h2>
+                <h2>{editing ? 'Editar Producto' : 'Panel de Administración'}</h2>
             </div>
 
             {success && (
@@ -112,12 +150,69 @@ const handleSubmit = async (e) => {
                         placeholder="Descripción del producto"
                         id="productDescription" />
                 </label>
+
+                <div className={styles.form}>
+                    <label className={styles.titleContainer}>Categoría del producto</label>
+                    <div className={styles.categoryContainer}>
+
+                        <label htmlFor="individual">
+                            <input
+                                type="radio"
+                                id="individual"
+                                name="productCategory"
+                                value="Individual"
+                                checked={productCategory === "Individual"}
+                                onChange={(e) => setProductCategory(e.target.value)}
+                            />
+                            Individual
+                        </label>
+
+                        <label htmlFor="doble">
+                            <input
+                                type="radio"
+                                id="doble"
+                                name="productCategory"
+                                value="Doble"
+                                checked={productCategory === "Doble"}
+                                onChange={(e) => setProductCategory(e.target.value)}
+                            />
+                            Doble
+                        </label>
+
+                        <label htmlFor="multiple">
+                            <input
+                                type="radio"
+                                id="multiple"
+                                name="productCategory"
+                                value="Multiple"
+                                checked={productCategory === "Multiple"}
+                                onChange={(e) => setProductCategory(e.target.value)}
+                            />
+                            Múltiple
+                        </label>
+                    </div>
+                </div>
+
+
                 <label htmlFor="productimages"> Imágenes del producto
                     <input type="file" multiple
                         accept="image/*"
                         onChange={handleFileChange}
                         id="productimages" />
                 </label>
+
+                {editing && product?.images && selectedFile.length === 0 && (
+                    <div className={styles.imagePreview}>
+                        {product.images.map((url, index) => (
+                            <img
+                                className={styles.productImage}
+                                key={index}
+                                src={url}
+                                alt={`Imagen ${index}`}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {selectedFile.length > 0 && (
                     <div className={styles.imagePreview}>
@@ -132,7 +227,7 @@ const handleSubmit = async (e) => {
                         ))}
                     </div>
                 )}
-                <button className={styles.button} type="submit">Agregar producto</button>
+                <button className={styles.button} type="submit">{editing ? 'Actualizar producto' : 'Agregar producto'}</button>
             </form>
         </div>
     )

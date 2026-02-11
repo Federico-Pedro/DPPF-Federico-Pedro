@@ -24,7 +24,8 @@ public class ProductController {
         Product createdProduct = productService.createProduct(
                 product.getName(),
                 product.getDescription(),
-                product.getImages()
+                product.getImages(),
+                product.getCategory()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
@@ -41,6 +42,22 @@ public class ProductController {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(
+        @PathVariable Long id,
+        @RequestBody Product product) {
+            Product updateProduct = productService.updateProduct(
+                id,
+                product.getName(),
+                product.getDescription(),
+                product.getImages(),
+                product.getCategory()
+            );
+            return ResponseEntity.ok(updateProduct);
+        }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

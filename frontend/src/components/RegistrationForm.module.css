@@ -11,17 +11,18 @@
     margin-top: 200px;
     padding: 25px;
     background-color: var(--night);
+    /* border: 1px solid red; */
 }
 
 .adminContainer h2 {
     padding: 15px;
     width: 100%;
-    text-align: center;
     color: var(--jasmine);
     font-family: 'Arial', sans-serif;
     font-size: 2rem;
 
 }
+
 .success,
 .error {
     color: var(--jasmine);
@@ -32,6 +33,7 @@
 .success {
     color: rgb(10, 116, 27)
 }
+
 .error {
     color: rgb(138, 29, 29)
 }
@@ -41,76 +43,28 @@
     flex-direction: column;
     align-items: center;
     width: 50vw;
-
+    /* border: 1px solid red; */
 }
 
-.form label {
+.label {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    width: 100%;
+    width: 95%;
     color: var(--jasmine);
     font-family: 'Arial', sans-serif;
     font-size: 1.2rem;
+    /* border: 1px solid red; */
 }
 
-.form input {
+.input {
     margin-top: 20px;
     width: 50%;
-}
-
-textarea {
-    height: 250px;
-    flex: 1;
-    min-width: 50%;
-    max-width: 600px;
-    border: 1px solid var(--raw-umber);
-    border-radius: 8px;
-    outline: none;
-    background: var(--black-olive);
-    padding: 0.75rem 1.5rem;
-    margin-top: 20px;
-    box-sizing: border-box;
-    box-shadow: none;
-    appearance: none;
-    font-family: inherit;
-    font-size: 1rem;
-    color: var(--olive);
-}
-
-
-textarea:focus {
-    outline: none;
-    border: 2px solid var(--raw-umber);
-   
-}
-
-.categoryContainer{
-    display: flex;
-    padding: 5px;
-    border: 1px solid var(--raw-umber);
-    border-radius: 8px;
-    width: 450px;
+    
 
 }
 
-.categoryContainer label input {
-    margin:5px;
-}
-
-
-.imagePreview {
-    display: flex;
-}
-
-.productImage {
-    width: 100px; 
-    height: 100px;
-    object-fit: cover;
-    margin: 10px; 
-    border-radius: 8px;
-}
 
 .button {
     background: var(--black-olive);

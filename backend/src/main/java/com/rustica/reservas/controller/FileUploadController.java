@@ -9,16 +9,52 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import com.rustica.reservas.exception.InvalidFileException;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class FileUploadController {
 
+    private static final List<String> ALLOWED_TYPES = Arrays.asList(
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/gif",
+            "image/webp"
+    );
+
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+    private void validateFile(MultipartFile file) {
+
+               if (file.isEmpty()) {
+            throw new InvalidFileException("No se seleccionó ningún archivo");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+            throw new InvalidFileException("Tipo de archivo no permitido. Solo se aceptan imágenes (JPG, PNG, GIF, WEBP)");
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new InvalidFileException("El archivo es demasiado grande. Tamaño máximo: 5MB");
+        }
+
+        String filename = file.getOriginalFilename();
+        if (filename == null || filename.isEmpty()) {
+            throw new InvalidFileException("Nombre de archivo inválido");
+        }
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+
+        for (MultipartFile file : files) {
+            validateFile(file);
+        }
 
         List<String> imageUrls = new ArrayList<>();
 
@@ -34,20 +70,19 @@ public class FileUploadController {
             }
 
             for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
+
                     String originalFilename = file.getOriginalFilename();
                     String filename = System.currentTimeMillis() + "_" + originalFilename;
                     Path filePath = uploadPath.resolve(filename);
                     Files.copy(file.getInputStream(), filePath);
                     imageUrls.add("/images/" + filename);
-                }
             }
 
             return ResponseEntity.ok(imageUrls);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            throw new InvalidFileException("Error al guardar el archivo: " + e.getMessage());
         }
     }
 }

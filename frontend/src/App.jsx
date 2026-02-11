@@ -7,6 +7,8 @@ import ProductDetail from './components/ProductDetail'
 import ProductGallery from './components/ProductGallery'
 import Form from './components/Form'
 import ProductsTable from './components/ProductsTable'
+import RegistrationForm from './components/RegistrationForm'
+
 
 import './App.css'
  
@@ -23,6 +25,8 @@ function App() {
       <Route path="/table" element={<ProductsTable />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/productGallery/:id" element={<ProductGallery />} />
+      <Route path="/form/edit/:id" element={<Form />} />
+      <Route path="/registrationForm" element={<RegistrationForm />} />
       </Routes>
       <Footer />
       </BrowserRouter>
