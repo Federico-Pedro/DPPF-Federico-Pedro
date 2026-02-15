@@ -16,7 +16,7 @@
 .adminContainer h2 {
     padding: 15px;
     width: 100%;
-    text-align: center;
+    
     color: var(--jasmine);
     font-family: 'Arial', sans-serif;
     font-size: 2rem;

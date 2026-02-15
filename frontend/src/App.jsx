@@ -8,6 +8,8 @@ import ProductGallery from './components/ProductGallery'
 import Form from './components/Form'
 import ProductsTable from './components/ProductsTable'
 import RegistrationForm from './components/RegistrationForm'
+import Login from './components/Login'
+import Profile from './components/Profile'
 
 
 import './App.css'
@@ -27,6 +29,8 @@ function App() {
       <Route path="/productGallery/:id" element={<ProductGallery />} />
       <Route path="/form/edit/:id" element={<Form />} />
       <Route path="/registrationForm" element={<RegistrationForm />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
       </BrowserRouter>

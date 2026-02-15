@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
 import styles from './Administracion.module.css';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom'
 
 const Administracion = () => {
 
+  const { user} = useAuth()
   const [isMobile, setIsMobile] = useState(false);
+
+  if(!user || user.role !== 'admin') return <Navigate to="/" />
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -32,8 +37,7 @@ const Administracion = () => {
   return (
     <div className={styles.adminContainer}>
       <Link to="/form" className={styles.adminButon}>Cargar un producto</Link>
-      <Link to="/edit" className={styles.adminButon}>Editar producto</Link>
-      <Link to="/eliminar" className={styles.adminButon}>Eliminar producto</Link>
+      
       <Link to="/table" className={styles.adminButon}>Ver todos los productos</Link>
     </div>
   );

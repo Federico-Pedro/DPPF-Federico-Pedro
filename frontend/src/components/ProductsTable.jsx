@@ -57,8 +57,8 @@ function ProductsTable() {
                 <h2>¿Está seguro que desea eliminar el producto: {productToDelete.name}?</h2>
                 <img style={{ width: '250px', heigh: 'auto', margin: '25px' }} src={productToDelete.images[0]} />
                 <div>
-                    <button className={styles.editButton} onClick={() => confirmDelete()}>Eliminar</button>
-                    <button className={styles.editButton} onClick={() => cancelDelete()}>Cancelar</button>
+                    <button className={styles.adminButton} onClick={() => confirmDelete()}>Eliminar</button>
+                    <button className={styles.adminButton} onClick={() => cancelDelete()}>Cancelar</button>
                 </div>
             </div>
         )

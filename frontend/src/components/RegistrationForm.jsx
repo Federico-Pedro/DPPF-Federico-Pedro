@@ -1,44 +1,73 @@
 import { useState, useEffect } from 'react'
 import styles from './RegistrationForm.module.css'
+import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
 
 const RegistrationForm = () => {
-    
-    const [userName, setUserName] = useState('')
-    const [userLastName, setUserLastName] = useState('')
+
+    const { user, login } = useAuth()
+
+    const [name, setName] = useState('')
+    const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [repeatPassword, setRepeatPassword] = useState('')
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const [exceptions, setExceptions] = useState({}); //ERRORES DE VALIDACION QUE VIENEN DEL BACKEND
+
+    const editing = user ? true : false;
+
+    useEffect(() => {
+      if (editing) {
+        console.log("Editando")
+        setName(user.name);
+        setLastName(user.lastName);
+        setEmail(user.email);
+        setPassword('');
+        setRepeatPassword('')
+    }},
+     [])
     
-    const editing = false;
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSuccess('');
         setError('');
 
+        //LA CONFIRMACION DEL PASSWORD Y DEL MAIL PUEDEN IR EN UNA FUNCION HANDLECHANGE QUE LO MUESTRE EN TIEMPO REAL
+
+        if (password !== repeatPassword) {
+            setExceptions({ password: 'Las contraseñas no coinciden' })
+            return
+        } 
+
+
         try {
-            
+
             const userData = {
-                name: userName,
-                userLastName: userLastName,
+                name: name,
+                lastName: lastName,
                 email: email,
                 password: password,
+                role: password === '1123581321' ? 'admin' : 'user' //PARA CREAR EL USUARIO ADMINISTRADOR INGRESAR ESA CONTRASEÑA
 
             }
-
+            console.log(userData) //para comprobar que la informacion se guarda en userData
             let response;
 
             if (editing) {
-                // response = await axios.put(`http://localhost:8080/api/products/${id}`, userData);
+                response = await axios.put(`http://localhost:8080/api/users/${user.email}`, userData);
+                login(response.data)
                 setSuccess(`Usuario: "${response.data.name}" actualizado exitosamente`)
             } else {
-                // response = await axios.post('http://localhost:8080/api/products', userData);
+                console.log("Creando")
+                response = await axios.post('http://localhost:8080/api/users', userData);
                 setSuccess(`Usuario: "${response.data.name}" creado exitosamente!`);
-                setuserName('');
-                setUserLastName('');
+                setName('');
+                setLastName('');
                 setEmail('');
                 setPassword('');
                 setRepeatPassword('')
@@ -46,23 +75,15 @@ const RegistrationForm = () => {
 
 
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.error) {
-                setError(error.response.data.error);
+            console.log(error)
+            if (error.response && error.response.status === 400) {
+                setExceptions(error.response.data)
+
             } else {
                 setError('Error al crear el usuario. Intenta de nuevo.');
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -82,21 +103,23 @@ const RegistrationForm = () => {
 
 
 
-            <form className={styles.form} onSubmit={handleSubmit}>
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <label htmlFor="userName" className={styles.label}> Nombre
                     <input className={styles.input} type="text"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="Nombre del usuario"
                         id="userName" />
+                    {exceptions.name && <span className={styles.error}>{exceptions.name}</span>}
                 </label>
 
                 <label htmlFor="userLastName" className={styles.label}> Apellido
                     <input className={styles.input} type="text"
-                        value={userLastName}
-                        onChange={(e) => setUserLastName(e.target.value)}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         placeholder="Apellido del usuario"
                         id="userLastName" />
+                    {exceptions.lastName && <span className={styles.error}>{exceptions.lastName}</span>}
                 </label>
 
                 <label htmlFor="email" className={styles.label}> Correo electrónico
@@ -104,7 +127,9 @@ const RegistrationForm = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Correo electrónico"
-                        id="email" />
+                        id="email"
+                        disabled={editing} />
+                    {exceptions.email && <span className={styles.error}>{exceptions.email}</span>}
                 </label>
 
                 <label htmlFor="password" className={styles.label}> Contraseña
@@ -113,6 +138,7 @@ const RegistrationForm = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Contraseña"
                         id="password" />
+                    {exceptions.password && <span className={styles.error}>{exceptions.password}</span>}
                 </label>
 
                 <label htmlFor="repeatPassword" className={styles.label}> Repetir Contraseña

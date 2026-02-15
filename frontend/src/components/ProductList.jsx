@@ -2,15 +2,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ProductList.module.css'
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'
 
 
 
 function ProductList() {
 
+    const { user } = useAuth()
+
     const [products, setProducts] = useState([])
     const [randomProducts, setRandomProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null)
 
     const productsPerPage = 10;
     const indexOfLastProduct = currentPage * productsPerPage;
@@ -53,6 +58,44 @@ function ProductList() {
         return shuffled;
     };
 
+
+    const handleClick = (product) => {
+        setShowModal(true);
+        setProductToDelete(product)
+
+    }
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/products/${productToDelete.id}`);
+            setShowModal(false)
+            setProductToDelete(null)
+            setProducts(products.filter(p => p.id !== productToDelete.id));
+        }
+        catch (error) {
+            console.error("Se produjo un error: ", error)
+        }
+    }
+
+    const cancelDelete = () => {
+        setShowModal(false);
+        setProductToDelete(null)
+    }
+
+
+    if (showModal) {
+        return (
+            <div className={styles.modal}>
+                <h2>¿Está seguro que desea eliminar el producto: {productToDelete.name}?</h2>
+                <img style={{ width: '250px', heigh: 'auto', margin: '25px' }} src={productToDelete.images[0]} />
+                <div className={styles.buttonContainer}>
+                    <button className={styles.adminButton} onClick={() => confirmDelete()}>Eliminar</button>
+                    <button className={styles.adminButton} onClick={() => cancelDelete()}>Cancelar</button>
+                </div>
+            </div>
+        )
+    }
+
     if (loading) {
         return (
             <div style={{ textAlign: 'center', padding: '20px', color: 'white' }}>
@@ -89,7 +132,33 @@ function ProductList() {
 
                                 <p>{product.description}</p>
                             </div>
+                            {user && user.role === 'admin' &&
+                                <>
+                                    <div className={styles.buttonContainer}>
+                                        <button
+                                            className={styles.adminButton}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                navigate(`/form/edit/${product.id}`)
+                                            }}
+                                        >
+                                            Editar
+                                        </button>
+                                        <button className={styles.adminButton} onClick={((e) => {
+                                            e.preventDefault()
+                                            e.stopPropagation()
+                                            handleClick(product)
+                                        })}>Borrar</button>
 
+                                    </div>
+
+
+
+
+
+                                </>
+                            }
                         </div>
                     </Link>))}
             </div>
@@ -129,7 +198,7 @@ function ProductList() {
                     Siguiente →
                 </button>
             </div>
-        </div>
+        </div >
     )
 }
 

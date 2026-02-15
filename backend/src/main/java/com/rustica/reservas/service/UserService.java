@@ -2,6 +2,7 @@ package com.rustica.reservas.service;
 
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.rustica.reservas.exception.UserAlreadyExistsException;
 import java.util.List;
@@ -10,12 +11,14 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(String name, String lastName, String email, String password) {
+    public User createUser(String name, String lastName, String email, String password, String role) {
 
         if (userRepository.existsByEmail(email)) {
             throw new UserAlreadyExistsException("Este email ya se encuentra registrado");
@@ -25,7 +28,8 @@ public class UserService {
         newUser.setName(name);
         newUser.setLastName(lastName);
         newUser.setEmail(email);
-        newUser.setPassword(password);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setRole(role);
 
 
         User savedUser = userRepository.save(newUser);
@@ -42,25 +46,43 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
-    public User updateUser(Long id, String name, String lastName, String email, String password) {
-        User existingUser = userRepository.findById(id)
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email o contraseña incorrectos"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Email o contraseña incorrectos");
+        }
+
+        return user;
+    }
+
+    public User updateUser(String email, String name, String lastName, String password, String role) {
+        User existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         existingUser.setName(name);
         existingUser.setLastName(lastName);
-        existingUser.setEmail(email);
-        existingUser.setPassword(password);
+        if (password != null && !password.isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(password));
+        }
+        existingUser.setRole(role);
 
         return userRepository.save(existingUser);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(String email) {
 
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("Usuario no encontrado con id: " + id);
+        if (!userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Usuario no encontrado");
         }
 
-        userRepository.deleteById(id);
+        userRepository.deleteByEmail(email);
     }
 
 }

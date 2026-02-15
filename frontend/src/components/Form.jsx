@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import styles from './Form.module.css'
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 function CreateProduct() {
 
@@ -26,7 +27,7 @@ function CreateProduct() {
         }
     }, [id]);
 
-
+    const navigate = useNavigate()
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
     const [productCategory, setProductCategory] = useState('')
@@ -63,6 +64,7 @@ function CreateProduct() {
         e.preventDefault();
         setSuccess('');
         setError('');
+        
 
         if (!productName.trim()) {
             setError('El nombre es obligatorio');
@@ -90,6 +92,7 @@ function CreateProduct() {
             if (editing) {
                 response = await axios.put(`http://localhost:8080/api/products/${id}`, productData);
                 setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
+                navigate('/')
             } else {
                 response = await axios.post('http://localhost:8080/api/products', productData);
                 setSuccess(`Producto "${response.data.name}" creado exitosamente!`);

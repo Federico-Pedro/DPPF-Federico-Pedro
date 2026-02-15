@@ -47,7 +47,7 @@
     height: 309px;
     overflow: hidden;
     
-    /* border: solid red 1px */
+    
 }
 .cardImage {
     height: 90%;
@@ -143,4 +143,72 @@
     border: 1px solid var(--raw-umber);
     border-radius: 4px;
     font-weight: bold;
+}
+
+.buttonContainer{
+    display: flex;
+    width: 75%;
+    justify-content: center;
+    padding: 5px;
+    margin: 10px;
+    overflow: hidden;
+    
+}
+
+.adminButton{
+    text-decoration: none;
+    background: var(--black-olive);
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--olive);
+    margin: 1rem;
+    padding: 0.5rem 1.5rem;
+    height: 30px;
+    width: 150px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 100;
+}
+
+
+.adminButon:hover{
+    background: var(--olive);
+    color: var(--black-olive);
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: 'center';
+    padding: '200px';
+    color: var(--jasmine)
+}
+
+@media (max-width: 999px) {
+  .cardContainer {
+    grid-template-columns:  1fr;
+    }
+
+    .imageContainer {
+    width: 400px;
+    height: 247px;
+    
+    
+    
+}
+.cardImage {
+    height: 80%;
+    width: 90%;
+}
+
 }

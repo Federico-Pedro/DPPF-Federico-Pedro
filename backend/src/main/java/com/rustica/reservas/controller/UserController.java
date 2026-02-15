@@ -1,7 +1,9 @@
 package com.rustica.reservas.controller;
 
+import com.rustica.reservas.dto.LoginRequest;
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +22,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User createdUser = userService.createUser(
                 user.getName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRole()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
@@ -43,25 +46,35 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
 
-    @PutMapping("/{id}")
+
+    @PutMapping("/{email}")
     public ResponseEntity<User> updateUser(
-            @PathVariable Long id,
+            @PathVariable String email,
             @RequestBody User user) {
         User updateUser = userService.updateUser(
-                id,
+                email,
                 user.getName(),
                 user.getLastName(),
-                user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRole()
         );
         return ResponseEntity.ok(updateUser);
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
         return ResponseEntity.noContent().build();
     }
 
