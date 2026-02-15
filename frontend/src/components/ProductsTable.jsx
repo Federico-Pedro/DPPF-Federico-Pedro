@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ProductsTable.module.css'
 import { Link } from 'react-router-dom';
-
+import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom'
 
 function ProductsTable() {
-
+    const { user } = useAuth()
+    if(!user || user.role !== 'admin') return <Navigate to="/" />
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);

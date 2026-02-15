@@ -202,6 +202,11 @@
     .imageContainer {
     width: 400px;
     height: 247px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    
     
     
     
@@ -212,3 +217,5 @@
 }
 
 }
+
+/* Achicar la fuente de las cards a partir de 700px aprox */

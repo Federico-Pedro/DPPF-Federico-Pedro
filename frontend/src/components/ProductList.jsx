@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 function ProductList() {
 
     const { user } = useAuth()
-
+    
     const [products, setProducts] = useState([])
     const [randomProducts, setRandomProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1)

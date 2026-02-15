@@ -10,6 +10,7 @@ import ProductsTable from './components/ProductsTable'
 import RegistrationForm from './components/RegistrationForm'
 import Login from './components/Login'
 import Profile from './components/Profile'
+import UsersTable from './components/UsersTable'
 
 
 import './App.css'
@@ -31,6 +32,7 @@ function App() {
       <Route path="/registrationForm" element={<RegistrationForm />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/usersTable" element={<UsersTable />} />
       </Routes>
       <Footer />
       </BrowserRouter>
