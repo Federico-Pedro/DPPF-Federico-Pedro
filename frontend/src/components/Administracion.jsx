@@ -37,8 +37,10 @@ const Administracion = () => {
   return (
     <div className={styles.adminContainer}>
       <Link to="/form" className={styles.adminButon}>Cargar un producto</Link>
-       <Link to="/Userstable" className={styles.adminButon}>Ver todos los usuarios</Link>
-      <Link to="/table" className={styles.adminButon}>Ver todos los productos</Link>
+       <Link to="/userstable" className={styles.adminButon}>Administrar usuarios</Link>
+      <Link to="/table" className={styles.adminButon}>Administrar productos</Link>
+      <Link to="/characteristics" className={styles.adminButon}>Administrar caracteristicas</Link>
+
     </div>
   );
 };

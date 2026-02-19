@@ -31,6 +31,7 @@ function CreateProduct() {
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
     const [productCategory, setProductCategory] = useState('')
+    const [characteristics, setCharacteristics] = useState('')
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -64,7 +65,7 @@ function CreateProduct() {
         e.preventDefault();
         setSuccess('');
         setError('');
-        
+
 
         if (!productName.trim()) {
             setError('El nombre es obligatorio');
@@ -84,7 +85,8 @@ function CreateProduct() {
                 name: productName,
                 description: description,
                 images: imageUrls,
-                category: productCategory
+                category: productCategory,
+                characteristics: characteristics
             }
 
             let response;
@@ -204,35 +206,39 @@ function CreateProduct() {
                         id="productimages" />
                 </label>
 
-                {editing && product?.images && selectedFile.length === 0 && (
-                    <div className={styles.imagePreview}>
-                        {product.images.map((url, index) => (
-                            <img
-                                className={styles.productImage}
-                                key={index}
-                                src={url}
-                                alt={`Imagen ${index}`}
-                            />
-                        ))}
-                    </div>
-                )}
+                {
+                    editing && product?.images && selectedFile.length === 0 && (
+                        <div className={styles.imagePreview}>
+                            {product.images.map((url, index) => (
+                                <img
+                                    className={styles.productImage}
+                                    key={index}
+                                    src={url}
+                                    alt={`Imagen ${index}`}
+                                />
+                            ))}
+                        </div>
+                    )
+                }
 
-                {selectedFile.length > 0 && (
-                    <div className={styles.imagePreview}>
-                        {selectedFile.map((file, index) => (
-                            <img
-                                className={styles.productImage}
-                                key={index}
-                                src={URL.createObjectURL(file)}
-                                alt={`Preview ${index}`}
+                {
+                    selectedFile.length > 0 && (
+                        <div className={styles.imagePreview}>
+                            {selectedFile.map((file, index) => (
+                                <img
+                                    className={styles.productImage}
+                                    key={index}
+                                    src={URL.createObjectURL(file)}
+                                    alt={`Preview ${index}`}
 
-                            />
-                        ))}
-                    </div>
-                )}
+                                />
+                            ))}
+                        </div>
+                    )
+                }
                 <button className={styles.button} type="submit">{editing ? 'Actualizar producto' : 'Agregar producto'}</button>
-            </form>
-        </div>
+            </form >
+        </div >
     )
 }
 

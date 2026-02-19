@@ -1,0 +1,105 @@
+.body{
+    margin-top: 180px;
+    margin-left: 50px;
+}
+
+.th{
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--olive);
+    width: 200px;
+    /* border: 1px solid red; */
+}
+
+.buttonCell{
+    width: 300px;
+    display: flex;
+    gap: 0.5rem; 
+    justify-content: center;
+    
+}
+
+.tableBody{
+    text-align: center;
+    color: white;
+}
+
+.addButtonContainer{
+    border: 2px solid var(--black-olive);
+    border-radius: 10px;
+    width: 95vw;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+    
+}
+.editButton, .deleteButton, .characteristicButton{
+    text-decoration: none;
+    background: var(--black-olive);
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--olive);
+    height: 30px;
+    width: 100px;
+    box-sizing: border-box;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    
+    overflow: hidden;
+}
+
+
+.editButton:hover, .deleteButton:hover, .characteristicButton:hover{
+    background: var(--olive);
+    color: var(--black-olive);
+}
+
+.characteristicButton {
+    width:fit-content;
+    height: 40px;
+    
+}
+
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    /* border: 1px solid green; */
+    
+}
+
+.inputContainer{
+    display: flex;
+    margin-right: 50px;
+}
+
+.form label {
+    color: var(--jasmine);
+    font-size: 1.2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-right: 50px;
+    
+}
+
+input[type="text"] {
+    margin:15px;
+}
+
+.iconSelector {
+    margin: 15px;
+    background-color: var(--black-olive);
+    height: 40px;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--jasmine);
+    outline: none
+}
+

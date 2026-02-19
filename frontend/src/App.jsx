@@ -11,6 +11,7 @@ import RegistrationForm from './components/RegistrationForm'
 import Login from './components/Login'
 import Profile from './components/Profile'
 import UsersTable from './components/UsersTable'
+import Characteristics from './components/Characteristics'
 
 
 import './App.css'
@@ -33,6 +34,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/usersTable" element={<UsersTable />} />
+      <Route path="/characteristics" element={<Characteristics />} />
+      
       </Routes>
       <Footer />
       </BrowserRouter>
