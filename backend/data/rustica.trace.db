@@ -849,3 +849,7 @@ SELECT * FROM CHARACTERISTICS [42000-232]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO CHARACTERISTICS VALUES(1,'bi-4-circle-fill', 'Vino incluido' )\000d\000a[*]SELECT * FROM CHARACTERISTICS"; SQL statement:
 INSERT INTO CHARACTERISTICS VALUES(1,'bi-4-circle-fill', 'Vino incluido' )
 SELECT * FROM CHARACTERISTICS [42000-232]
+2026-02-21 10:53:41.498183-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from characteristics\000d\000aTRUNCATE [*]TABLE characteristics"; SQL statement:
+select * from characteristics
+TRUNCATE TABLE characteristics [42000-232]

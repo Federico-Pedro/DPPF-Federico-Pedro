@@ -38,8 +38,23 @@ function Characteristics() {
         //FUNCION EDITAR CARACTERISTICA
     }
 
+    const data = {
+        name: characteristicName,
+        icon: icon,
+
+    }
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            console.log(data)
+            const response = await axios.post('http://localhost:8080/api/characteristics', data);
+            setCharacteristics(prev => [...prev, response.data])
+        }
+        catch (error) {
+            console.error("Se produjo un error: ", error)
+        }
     }
 
     const confirmDelete = async () => {
@@ -125,12 +140,13 @@ function Characteristics() {
 
                         <label htmlFor="icons">Elige un ícono:
 
-                            <select name="icons" id="icons" className={styles.iconSelector}>
-                                <option value="" disabled selected>Seleccione un icono</option>
-                                <option value="">Vino incluido</option>
-                                <option value="">Cubiertos</option>
-                                <option value="">Entrada gratis</option>
-                                <option value="">Canilla libre</option>
+                            <select name="icons" id="icons" className={styles.iconSelector} onChange={(e) => setIcon(e.target.value)} defaultValue="">
+                                <option value="" disabled>Seleccione un icono</option>
+                                <option value="bi-cup-hot-fill">Café gratis</option>
+                                <option value="bi-box-seam-fill">Para llevar</option>
+                                <option value="bi-cash-coin">Precios elevados</option>
+                                <option value="bi-fork-knife">Cubiertos incluidos</option>
+                                <option value="bi-wifi">Wi-fi</option>
                             </select>
                         </label>
                     </div>
