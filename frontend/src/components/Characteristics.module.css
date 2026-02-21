@@ -42,7 +42,7 @@
     font-weight: bold;
     color: var(--olive);
     height: 30px;
-    width: 100px;
+    width: 250px !important;
     box-sizing: border-box;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;

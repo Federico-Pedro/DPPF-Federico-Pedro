@@ -2,18 +2,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Characteristics.module.css'
 import { useAuth } from '../context/AuthContext'
+import { useParams } from 'react-router-dom';
 import { Navigate } from 'react-router-dom'
 
 function Characteristics() {
 
     const { user } = useAuth()
     if (!user || user.role !== 'admin') return <Navigate to="/" />
+    const [characteristicToEdit, setCharacteristicToEdit] = useState('')
     const [characteristics, setCharacteristics] = useState([]);
     const [characteristicName, setCharacteristicName] = useState('')
     const [icon, setIcon] = useState('')
     const [showModal, setShowModal] = useState(false);
     const [characteristicToDelete, setCharacteristicToDelete] = useState(null)
-
+    const [id, setId] = useState(undefined)
     useEffect(() => {
         const fetchCharacteristics = async () => {
             try {
@@ -28,15 +30,36 @@ function Characteristics() {
         fetchCharacteristics();
     }, []);
 
+    
+
+    const editing = id !== undefined;
+    console.log(editing)
+
+    useEffect(() => {
+        if (editing) {
+            axios.get(`http://localhost:8080/api/characteristics/${id}`)
+                .then(response => {
+                    const characteristicToEdit = response.data;
+                    setCharacteristicName(characteristicToEdit.name || '');
+                    setIcon(characteristicToEdit.icon || '');
+                    
+                })
+                .catch(error => {
+                    console.error('Error fetching charcateristic:', error);
+                });
+        }
+    }, [id]);
+
     const handleDelete = (characteristic) => {
         setShowModal(true);
         setCharacteristicToDelete(characteristic)
     }
 
-    const handleClick = (characteristic) => {
-
-        //FUNCION EDITAR CARACTERISTICA
-    }
+     const handleClick = (characteristic) => {
+         setId(characteristic.id)
+        
+         
+     }
 
     const data = {
         name: characteristicName,
@@ -48,9 +71,14 @@ function Characteristics() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(data)
-            const response = await axios.post('http://localhost:8080/api/characteristics', data);
-            setCharacteristics(prev => [...prev, response.data])
+            if (editing) {
+                await axios.put(`http://localhost:8080/api/characteristics/${id}`, data);
+                const response = await axios.get('http://localhost:8080/api/characteristics');setCharacteristics(response.data)
+            } else {
+
+                const response = await axios.post('http://localhost:8080/api/characteristics', data);
+                setCharacteristics(prev => [...prev, response.data])
+            }
         }
         catch (error) {
             console.error("Se produjo un error: ", error)
@@ -111,7 +139,12 @@ function Characteristics() {
                             <td className={styles.cell}><i className={`bi ${characteristic.icon}`}></i></td>
 
                             <td className={styles.buttonCell}>
-                                <button className={styles.deleteButton} onClick={() => handleClick(characteristic)}>Editar</button>
+                                <button className={styles.deleteButton} onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                handleClick(characteristic)
+                                                
+                                                }}>Editar</button>
                                 <button className={styles.deleteButton} onClick={() => handleDelete(characteristic)}>Eliminar</button>
 
 
@@ -140,7 +173,7 @@ function Characteristics() {
 
                         <label htmlFor="icons">Elige un ícono:
 
-                            <select name="icons" id="icons" className={styles.iconSelector} onChange={(e) => setIcon(e.target.value)} defaultValue="">
+                            <select name="icons" id="icons" className={styles.iconSelector} onChange={(e) => setIcon(e.target.value)} value={icon || ""}>
                                 <option value="" disabled>Seleccione un icono</option>
                                 <option value="bi-cup-hot-fill">Café gratis</option>
                                 <option value="bi-box-seam-fill">Para llevar</option>
@@ -155,7 +188,7 @@ function Characteristics() {
 
 
 
-                    <button className={styles.characteristicButton} type="submit">Añadir caracteristica</button>
+                    <button className={styles.characteristicButton} type="submit">{editing ? 'Actualizar caracteristica' : 'Añadir caracteristica'}</button>
                 </form>
             </div>
 
