@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import styles from './RegistrationForm.module.css'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 
 const RegistrationForm = () => {
 
     const { user, login } = useAuth()
-
+    const navigate = useNavigate()
     const [name, setName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -20,17 +21,18 @@ const RegistrationForm = () => {
     const editing = user ? true : false;
 
     useEffect(() => {
-      if (editing) {
-        console.log("Editando")
-        setName(user.name);
-        setLastName(user.lastName);
-        setEmail(user.email);
-        setPassword('');
-        setRepeatPassword('')
-    }},
-     [])
-    
-    
+        if (editing) {
+            console.log("Editando")
+            setName(user.name);
+            setLastName(user.lastName);
+            setEmail(user.email);
+            setPassword('');
+            setRepeatPassword('')
+        }
+    },
+        [])
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,7 +44,7 @@ const RegistrationForm = () => {
         if (password !== repeatPassword) {
             setExceptions({ password: 'Las contraseñas no coinciden' })
             return
-        } 
+        }
 
 
         try {
@@ -71,6 +73,7 @@ const RegistrationForm = () => {
                 setEmail('');
                 setPassword('');
                 setRepeatPassword('')
+                setTimeout(() => navigate('/login'), 2000)
             }
 
 
@@ -94,12 +97,7 @@ const RegistrationForm = () => {
                 <h2>{editing ? 'Editar usuario' : 'Registrarse'}</h2>
             </div>
 
-            {success && (
-                <div className={styles.success}>{success}</div>
-            )}
-            {error && (
-                <div className={styles.error}>{error}</div>
-            )}
+
 
 
 
@@ -151,6 +149,12 @@ const RegistrationForm = () => {
 
 
 
+                {success && (
+                    <div className={styles.success}>{success}</div>
+                )}
+                {error && (
+                    <div className={styles.error}>{error}</div>
+                )}
                 <button className={styles.button} type="submit">{editing ? 'Actualizar usuario' : 'Crear usuario'}</button>
             </form>
         </div>

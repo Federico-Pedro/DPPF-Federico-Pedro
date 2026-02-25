@@ -2,12 +2,14 @@ package com.rustica.reservas.controller;
 
 import com.rustica.reservas.dto.LoginRequest;
 import com.rustica.reservas.entity.User;
+import com.rustica.reservas.service.EmailService;
 import com.rustica.reservas.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -16,9 +18,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailService emailService) {
+
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping
@@ -76,6 +81,18 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
         return ResponseEntity.noContent().build();
+    }
+
+
+
+    @PostMapping("/resend-confirmation")
+    public ResponseEntity<Void> resendConfirmation(@RequestBody String email) throws UnsupportedEncodingException {
+        email = java.net.URLDecoder.decode(email, "UTF-8").replace("\"", "").replace("=", "").trim();
+
+        System.out.println(email);
+        User user = userService.getUserByEmail(email);
+        emailService.sendConfirmationEmail(user.getName(), user.getEmail());
+        return ResponseEntity.ok().build();
     }
 
 }

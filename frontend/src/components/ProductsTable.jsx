@@ -17,8 +17,9 @@ function ProductsTable() {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/products');
+                
                 setProducts(response.data)
-
+                
             } catch (error) {
                 console.error('Error al cargar productos', error);
             } finally {
@@ -27,6 +28,7 @@ function ProductsTable() {
         };
 
         fetchProducts();
+        
     }, []);
 
     const handleClick = (product) => {
@@ -84,6 +86,7 @@ function ProductsTable() {
                         <th className={styles.th}>ID</th>
                         <th className={styles.th}>Nombre</th>
                         <th className={styles.th}>Categoría</th>
+                        <th className={styles.th}>Características</th>
                         <th className={styles.th}>Acciones</th>
                     </tr>
                 </thead>
@@ -93,6 +96,7 @@ function ProductsTable() {
                             <td className={styles.cell}>{product.id}</td>
                             <td className={styles.cell}>{product.name}</td>
                             <td className={styles.cell}>{product.category}</td>
+                            <td className={styles.cell}>{product.characteristics.map(char => (<i className={`bi ${char.icon}`} key={char.id}></i>))}</td>
                             <td className={styles.buttonCell}>
                                 <Link to={`/form/edit/${product.id}`} className={styles.adminButon}>
                                     <button className={styles.editButton}>Editar</button>

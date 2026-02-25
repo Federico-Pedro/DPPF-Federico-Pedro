@@ -1,5 +1,6 @@
 package com.rustica.reservas.controller;
 
+import com.rustica.reservas.dto.ProductRequest;
 import com.rustica.reservas.entity.Product;
 import com.rustica.reservas.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
         Product createdProduct = productService.createProduct(
-                product.getName(),
-                product.getDescription(),
-                product.getImages(),
-                product.getCategory()
+                request.getName(),
+                request.getDescription(),
+                request.getImages(),
+                request.getCategory(),
+                request.getCharacteristicIds()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
@@ -47,13 +49,14 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
         @PathVariable Long id,
-        @RequestBody Product product) {
+        @RequestBody ProductRequest request) {
             Product updateProduct = productService.updateProduct(
                 id,
-                product.getName(),
-                product.getDescription(),
-                product.getImages(),
-                product.getCategory()
+                request.getName(),
+                    request.getDescription(),
+                    request.getImages(),
+                    request.getCategory(),
+                    request.getCharacteristicIds()
             );
             return ResponseEntity.ok(updateProduct);
         }

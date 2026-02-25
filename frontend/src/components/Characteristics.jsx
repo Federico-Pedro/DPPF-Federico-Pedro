@@ -2,20 +2,23 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Characteristics.module.css'
 import { useAuth } from '../context/AuthContext'
-import { useParams } from 'react-router-dom';
 import { Navigate } from 'react-router-dom'
 
-function Characteristics() {
 
+
+function Characteristics() {
+    
     const { user } = useAuth()
-    if (!user || user.role !== 'admin') return <Navigate to="/" />
-    const [characteristicToEdit, setCharacteristicToEdit] = useState('')
+    if(!user || user.role !== 'admin') return <Navigate to="/" />
+    
+       
     const [characteristics, setCharacteristics] = useState([]);
     const [characteristicName, setCharacteristicName] = useState('')
     const [icon, setIcon] = useState('')
     const [showModal, setShowModal] = useState(false);
     const [characteristicToDelete, setCharacteristicToDelete] = useState(null)
     const [id, setId] = useState(undefined)
+
     useEffect(() => {
         const fetchCharacteristics = async () => {
             try {

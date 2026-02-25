@@ -1,7 +1,9 @@
 package com.rustica.reservas.service;
 
+import com.rustica.reservas.entity.Characteristic;
 import com.rustica.reservas.entity.Product;
 import com.rustica.reservas.repository.ProductRepository;
+import com.rustica.reservas.repository.CharacteristicRepository;
 import org.springframework.stereotype.Service;
 import com.rustica.reservas.exception.ProductAlreadyExistsException;
 import java.util.List;
@@ -10,12 +12,14 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CharacteristicRepository characteristicRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CharacteristicRepository characteristicRepository) {
         this.productRepository = productRepository;
+        this.characteristicRepository = characteristicRepository;
     }
 
-    public Product createProduct(String name, String description, List<String> images, String category) {
+    public Product createProduct(String name, String description, List<String> images, String category, List<Long> characteristicIds) {
 
         if (productRepository.existsByName(name)) {
             throw new ProductAlreadyExistsException("Ya existe un producto con el nombre: " + name);
@@ -27,6 +31,8 @@ public class ProductService {
         newProduct.setImages(images);
         newProduct.setActive(true);
         newProduct.setCategory(category);
+        List<Characteristic> characteristics = characteristicRepository.findAllById(characteristicIds);
+        newProduct.setCharacteristics(characteristics);
 
         Product savedProduct = productRepository.save(newProduct);
 
@@ -42,7 +48,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
     }
 
-    public Product updateProduct(Long id, String name, String description, List<String> images, String category) {
+    public Product updateProduct(Long id, String name, String description, List<String> images, String category, List<Long> characteristicIds) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
 
@@ -50,6 +56,8 @@ public class ProductService {
         existingProduct.setDescription(description);
         existingProduct.setImages(images);
         existingProduct.setCategory(category);
+        List<Characteristic> characteristics = characteristicRepository.findAllById(characteristicIds);
+        existingProduct.setCharacteristics(characteristics);
 
         return productRepository.save(existingProduct);
     }

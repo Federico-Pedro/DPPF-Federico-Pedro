@@ -88,3 +88,23 @@
     color: var(--black-olive);
 }
 
+.resend {
+    font-size: 1rem;
+    color: var(--raw-umber);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    margin-top: 50px;
+    padding: 25px;
+}
+
+.resend h6 {
+    font-size: 1.5rem;
+}
+
+.resend form {
+    font-size: 1rem;
+    color: var(--raw-umber);
+}

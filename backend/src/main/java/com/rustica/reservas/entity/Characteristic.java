@@ -1,10 +1,12 @@
 package com.rustica.reservas.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
 
 
 @Entity
@@ -24,4 +26,8 @@ public class Characteristic {
     @NotBlank(message = "El icono es obligatorio")
     @Column(nullable = false)
     private String icon;
+
+    @ManyToMany(mappedBy = "characteristics")
+    @JsonIgnore
+    private List<Product> products;
 }

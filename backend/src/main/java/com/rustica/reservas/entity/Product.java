@@ -34,4 +34,12 @@ public class Product {
 
     @Column
     private String category;
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_characteristics",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "characteristic_id")
+    )
+    private List<Characteristic> characteristics;
 }

@@ -6,10 +6,10 @@ import { Navigate } from 'react-router-dom'
 
 const Administracion = () => {
 
-  const { user} = useAuth()
+  const { user } = useAuth()
   const [isMobile, setIsMobile] = useState(false);
 
-  if(!user || user.role !== 'admin') return <Navigate to="/" />
+   if (!user || user.role !== 'admin') return <Navigate to="/" />
 
   useEffect(() => {
     const checkScreenSize = () => {

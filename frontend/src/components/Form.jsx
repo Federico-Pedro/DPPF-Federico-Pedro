@@ -3,13 +3,19 @@ import axios from 'axios'
 import styles from './Form.module.css'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+
 
 function CreateProduct() {
+
+    const { user } = useAuth()
+    if (!user || user.role !== 'admin') return <Navigate to="/" />
 
     const { id } = useParams();
 
     const editing = id !== undefined;
     const [product, setProduct] = useState('')
+
     useEffect(() => {
         if (editing) {
             axios.get(`http://localhost:8080/api/products/${id}`)
@@ -19,6 +25,7 @@ function CreateProduct() {
                     setProductName(product.name || '');
                     setDescription(product.description || '');
                     setProductCategory(product.category || '');
+                    setSelectedCharacteristics(product.characteristics.map(char => char.id) || [])
 
                 })
                 .catch(error => {
@@ -27,11 +34,27 @@ function CreateProduct() {
         }
     }, [id]);
 
+    //Trae las características de la base de datos 
+    useEffect(() => {
+        const fetchCharacteristics = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/characteristics');
+                setCharacteristics(response.data)
+
+            } catch (error) {
+                console.error('Error al cargar características', error);
+            }
+        };
+
+        fetchCharacteristics();
+    }, []);
+
     const navigate = useNavigate()
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
     const [productCategory, setProductCategory] = useState('')
-    const [characteristics, setCharacteristics] = useState('')
+    const [selectedCharacteristics, setSelectedCharacteristics] = useState([])
+    const [characteristics, setCharacteristics] = useState([])
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -86,11 +109,11 @@ function CreateProduct() {
                 description: description,
                 images: imageUrls,
                 category: productCategory,
-                characteristics: characteristics
+                characteristicIds: selectedCharacteristics
             }
 
             let response;
-
+            console.log(productData)
             if (editing) {
                 response = await axios.put(`http://localhost:8080/api/products/${id}`, productData);
                 setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
@@ -195,6 +218,30 @@ function CreateProduct() {
                             />
                             Múltiple
                         </label>
+                    </div>
+                    <label>Características del producto</label>
+                    <div className={styles.characteristicsContainer}>
+                        {characteristics.map(char => (
+                            
+                            <label htmlFor={char.id}>{char.name}
+
+                            <input
+                                type="checkbox"
+                                id={char.id}
+                                name={char.name}
+                                value={char.id}
+                                checked={selectedCharacteristics.includes(char.id)}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    if (e.target.checked) {
+                                        setSelectedCharacteristics(prev => [...prev, value]);
+                                    } else {
+                                        setSelectedCharacteristics(prev => prev.filter(id => id !== value));
+                                    }
+                                }}
+                            />
+                        </label>
+                        ))}
                     </div>
                 </div>
 

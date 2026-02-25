@@ -3,6 +3,7 @@ package com.rustica.reservas.service;
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.rustica.reservas.service.EmailService;
 import org.springframework.stereotype.Service;
 import com.rustica.reservas.exception.UserAlreadyExistsException;
 import java.util.List;
@@ -12,10 +13,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public User createUser(String name, String lastName, String email, String password, String role) {
@@ -33,6 +36,7 @@ public class UserService {
 
 
         User savedUser = userRepository.save(newUser);
+        emailService.sendConfirmationEmail(name, email);
 
         return savedUser;
     }

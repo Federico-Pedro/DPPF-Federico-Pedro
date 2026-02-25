@@ -14,8 +14,8 @@ const ProductDetail = () => {
         axios.get(`http://localhost:8080/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
-                console.log(response.data);
-            })
+                console.log(response.data)
+           })
             .catch(error => {
                 console.error('Error fetching product:', error);
             });
@@ -28,7 +28,7 @@ const ProductDetail = () => {
 
         </div>)
     }
-
+    
     return (
         <div className={styles.container}>
             <div className={styles.titleContainer}>
@@ -64,6 +64,21 @@ const ProductDetail = () => {
             <div className={styles.productDescription}>
 
                 <p>{product.description}</p>
+            </div>
+            <div className={`${styles.productDescription} ${styles.productCharacteristics}`}>
+                <h3>Características</h3>
+
+                <div className={styles.iconsContainer}>
+                    {product.characteristics.map(char =>
+                   
+                        <div className={styles.charContainer} key={char.id}>
+                        <i className={`bi ${char.icon}`} ></i>
+                        <p>{char.name}</p>
+                        </div>
+                    
+                    
+                )}
+                </div>
             </div>
         </div>
     );

@@ -99,6 +99,17 @@ textarea:focus {
     margin:5px;
 }
 
+.characteristicsContainer{
+    display: flex;
+    padding: 5px;
+    margin-top: 25px;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    width: 450px;
+    color: var(--jasmine);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 
 .imagePreview {
     display: flex;

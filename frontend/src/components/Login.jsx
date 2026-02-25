@@ -9,7 +9,7 @@ const Login = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
+    const [resendEmail, setResendEmail] = useState('')
     const [exceptions, setExceptions] = useState(''); //ERRORES DE VALIDACION QUE VIENEN DEL BACKEND
 
     const { login } = useAuth()
@@ -18,7 +18,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-       
+
         try {
 
             const response = await axios.post(`http://localhost:8080/api/users/login`, {
@@ -39,6 +39,24 @@ const Login = () => {
         }
     }
 
+    const resend = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(resendEmail)
+
+            await axios.post(`http://localhost:8080/api/users/resend-confirmation`, resendEmail);
+            setResendEmail('Mail reenviado con éxito');
+
+
+        }
+        catch (error) {
+
+            if (error.response && error.response.status === 401) {
+                setExceptions(error.response.data)
+
+            }
+        }
+    }
 
 
 
@@ -74,6 +92,14 @@ const Login = () => {
 
                 <button className={styles.button} type="submit">Login</button>
             </form>
+
+            <div className={styles.resend}>
+                <h6>¿No recibieste el mail de confirmación?</h6>
+                <form onSubmit={resend}>
+                    Ingresá tu mail<input type="text" value={resendEmail} onChange={(e) => setResendEmail(e.target.value)} />
+                    <button className={styles.button} type="submit">Reenviar</button>
+                </form>
+            </div>
         </div>
     )
 }
