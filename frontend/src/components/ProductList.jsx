@@ -9,10 +9,11 @@ import { useAuth } from '../context/AuthContext'
 function ProductList() {
 
     const { user } = useAuth()
-    
-    const [products, setProducts] = useState([])
-    const [randomProducts, setRandomProducts] = useState([])
-    const [currentPage, setCurrentPage] = useState(1)
+
+    const [activeFilters, setActiveFilters] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [randomProducts, setRandomProducts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null)
@@ -20,7 +21,7 @@ function ProductList() {
     const productsPerPage = 10;
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const totalPages = Math.ceil(products.length / productsPerPage);
+    
 
     //Este useEffect trae todos los productos de la base de datos (simulando un delay de 1.5 seg), los cololca en la variable products, luego la funcion getRandomProducts los mezcla y los coloca en randomProducts
     useEffect(() => {
@@ -41,9 +42,15 @@ function ProductList() {
         fetchProducts();
     }, []);
 
+    //Esta variable contiene los productos filtrados (ya mezclados aleatoriamente) segun que botones estan clickeados
+    const filteredProducts = activeFilters.length === 0
+        ? randomProducts
+        : randomProducts.filter(p => activeFilters.includes(p.category));
 
     //Acá se hace un slice de 10 productos teniendo en cuenta la página en que nos encontamos y se colocan en currentProducts (que es la variable que se mapea en el renderizado)
-    const currentProducts = randomProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
     const getRandomProducts = (products) => {
         const shuffled = [...products];
@@ -63,6 +70,12 @@ function ProductList() {
         setShowModal(true);
         setProductToDelete(product)
 
+    }
+
+    const handleFilterClick = (filter) => {
+        setActiveFilters(prev =>
+            prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
+        )
     }
 
     const confirmDelete = async () => {
@@ -108,6 +121,17 @@ function ProductList() {
 
     return (
         <div className={styles.body}>
+
+            <div className={styles.filterContainer}>Filtrar:
+                <button className={activeFilters.includes('Simple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Simple')}>Simple</button>
+                <button className={activeFilters.includes('Doble') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Doble')}>Doble</button>
+                <button className={activeFilters.includes('Multiple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Multiple')}>Multiple</button>
+            </div>
+            <div className={styles.counter}>
+                Cantidad de productos: {filteredProducts.length} / {products.length}
+            </div>
+
+
             <div className={styles.cardContainer}>
                 {currentProducts.map(product => (
 
