@@ -123,7 +123,7 @@ function ProductList() {
         <div className={styles.body}>
 
             <div className={styles.filterContainer}>Filtrar:
-                <button className={activeFilters.includes('Simple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Simple')}>Simple</button>
+                <button className={activeFilters.includes('Individual') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Individual')}>Individual</button>
                 <button className={activeFilters.includes('Doble') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Doble')}>Doble</button>
                 <button className={activeFilters.includes('Multiple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Multiple')}>Multiple</button>
             </div>

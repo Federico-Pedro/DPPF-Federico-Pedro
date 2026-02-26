@@ -54,7 +54,7 @@ const RegistrationForm = () => {
                 lastName: lastName,
                 email: email,
                 password: password,
-                role: password === '1123581321' ? 'admin' : 'user' //PARA CREAR EL USUARIO ADMINISTRADOR INGRESAR ESA CONTRASEÑA
+                role: password === import.meta.env.VITE_ADMIN_PASSWORD ? 'admin' : 'user'
 
             }
             console.log(userData) //para comprobar que la informacion se guarda en userData
