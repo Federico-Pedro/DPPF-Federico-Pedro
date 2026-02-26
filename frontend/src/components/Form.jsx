@@ -117,7 +117,7 @@ function CreateProduct() {
             if (editing) {
                 response = await axios.put(`http://localhost:8080/api/products/${id}`, productData);
                 setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
-                navigate('/')
+                navigate('/table')
             } else {
                 response = await axios.post('http://localhost:8080/api/products', productData);
                 setSuccess(`Producto "${response.data.name}" creado exitosamente!`);

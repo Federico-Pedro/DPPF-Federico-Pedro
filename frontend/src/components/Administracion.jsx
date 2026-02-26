@@ -40,6 +40,7 @@ const Administracion = () => {
        <Link to="/userstable" className={styles.adminButon}>Administrar usuarios</Link>
       <Link to="/table" className={styles.adminButon}>Administrar productos</Link>
       <Link to="/characteristics" className={styles.adminButon}>Administrar caracteristicas</Link>
+      <Link to="/category" className={styles.adminButon}>Agregar categoría</Link>
 
     </div>
   );

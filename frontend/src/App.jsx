@@ -12,6 +12,7 @@ import Login from './components/Login'
 import Profile from './components/Profile'
 import UsersTable from './components/UsersTable'
 import Characteristics from './components/Characteristics'
+import Category from './components/Category'
 
 
 import './App.css'
@@ -35,6 +36,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/usersTable" element={<UsersTable />} />
       <Route path="/characteristics" element={<Characteristics />} />
+      <Route path="/category" element={<Category />} />
       
       </Routes>
       <Footer />
