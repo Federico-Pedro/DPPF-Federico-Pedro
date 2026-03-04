@@ -111,6 +111,15 @@ function CreateProduct() {
             setError('Debe agregar al menos una imagen');
             return;
         }
+        if (!characteristics) {
+            setError('Debe agregar al menos una caracteristica');
+            return;
+        }
+        if (!productCategory) {
+            setError('La categoría es obligaroria');
+            return;
+        }
+
 
         try {
             let imageUrls = [];
@@ -169,12 +178,7 @@ function CreateProduct() {
                 <h2>{editing ? 'Editar Producto' : 'Panel de Administración'}</h2>
             </div>
 
-            {success && (
-                <div className={styles.success}>{success}</div>
-            )}
-            {error && (
-                <div className={styles.error}>{error}</div>
-            )}
+
 
 
 
@@ -280,6 +284,14 @@ function CreateProduct() {
                         </div>
                     )
                 }
+
+                {success && (
+                    <div className={styles.success}>{success}</div>
+                )}
+                {error && (
+                    <div className={styles.error}>{error}</div>
+                )}
+
                 <button className={styles.button} type="submit">{editing ? 'Actualizar producto' : 'Agregar producto'}</button>
             </form >
         </div >
