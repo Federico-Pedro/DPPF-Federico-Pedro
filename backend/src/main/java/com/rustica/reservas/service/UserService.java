@@ -2,6 +2,7 @@ package com.rustica.reservas.service;
 
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.repository.UserRepository;
+import com.rustica.reservas.util.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.rustica.reservas.service.EmailService;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, EmailService emailService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.jwtUtil = jwtUtil;
     }
 
     public User createUser(String name, String lastName, String email, String password, String role) {
@@ -55,7 +58,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
-    public User login(String email, String password) {
+    public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email o contraseña incorrectos"));
 
@@ -63,7 +66,7 @@ public class UserService {
             throw new RuntimeException("Email o contraseña incorrectos");
         }
 
-        return user;
+        return jwtUtil.generateToken(user.getEmail(), user.getRole());
     }
 
     public User updateUser(String email, String name, String lastName, String password, String role) {

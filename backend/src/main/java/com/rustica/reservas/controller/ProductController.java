@@ -3,6 +3,7 @@ package com.rustica.reservas.controller;
 import com.rustica.reservas.dto.ProductRequest;
 import com.rustica.reservas.entity.Product;
 import com.rustica.reservas.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest request) {
         Product createdProduct = productService.createProduct(
                 request.getName(),
                 request.getDescription(),
@@ -49,6 +50,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
         @PathVariable Long id,
+        @Valid
         @RequestBody ProductRequest request) {
             Product updateProduct = productService.updateProduct(
                 id,

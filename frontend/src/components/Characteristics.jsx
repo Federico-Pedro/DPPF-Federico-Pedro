@@ -123,6 +123,7 @@ function Characteristics() {
 
     return (
         <div className={styles.body}>
+            
             <table>
                 <thead className={styles.tableHead}>
                     <tr>

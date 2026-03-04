@@ -40,7 +40,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50vw;
+    width: 65vw;
 
 }
 
@@ -57,13 +57,13 @@
 
 .form input {
     margin-top: 20px;
-    width: 50%;
+    width: 65%;
 }
 
 textarea {
-    height: 250px;
+    height: 300px;
     flex: 1;
-    min-width: 50%;
+    min-width: 80%;
     max-width: 600px;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;
@@ -91,7 +91,7 @@ textarea:focus {
     padding: 5px;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;
-    width: 450px;
+    width: 80%;
 
 }
 
@@ -105,7 +105,7 @@ textarea:focus {
     margin-top: 25px;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;
-    width: 450px;
+    width: 80%;
     color: var(--jasmine);
     font-family: Arial, Helvetica, sans-serif;
 }

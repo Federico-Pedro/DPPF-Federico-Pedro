@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,8 +56,17 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-            return ResponseEntity.ok(user);
+            User user = userService.getUserByEmail(loginRequest.getEmail());
+            String token = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("name", user.getName());
+            response.put("lastName", user.getLastName());
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole());
+
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }

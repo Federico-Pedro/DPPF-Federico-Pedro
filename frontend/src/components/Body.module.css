@@ -6,27 +6,100 @@
     flex-direction: column;
     align-items: center;
     overflow: hidden;
+    
 }
 
 .searchContainer {
-    width: 90vw;
-    max-width: 1000px;
+    width: 95vw;
+    max-width: 1200px;
     min-height: 60px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: stretch;
+    align-items: left;
+    font-family: 'rustic';
+    color: var(--raw-umber);
+    font-size: 50px;
+    border: 1px solid var(--dark-umber);
+    border-radius: 8px;
+    padding: 5px 50px;
+        
 }
 
+
+
+.searchContainer p {
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sugerencias {
+    font-size: 1.5rem;
+    color: var(--jasmine)
+    }
+
 .searchContainer form {
-    width: 50%;
+    width: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
+    gap: 100px;
+    padding: 10px;
+   
+}
+
+
+
+
+:global(.react-datepicker-wrapper),
+:global(.react-datepicker__input-container) {
+  display: flex !important;
+  align-items: center !important;
+}
+
+:global(.react-datepicker),
+:global(.react-datepicker__header) {
+    background-color: var(--black-olive) !important;
+    
+    
+}
+:global(.react-datepicker__navigation-icon) {
+  font-size: 0 !important;
+  width: 20px !important;
+  overflow: visible !important;
+}
+
+:global(.react-datepicker__navigation) {
+  overflow: hidden !important;
+  text-indent: 0 !important;
+}
+
+:global(.react-datepicker__navigation-icon--next)::before,
+:global(.react-datepicker__navigation-icon--previous)::before {
+  border-color: var(--jasmine) !important;
+  top: -5px !important;
+}
+
+:global(.react-datepicker [role="rowgroup"]) {
+    overflow: hidden !important;
+}
+
+:global(.react-datepicker__day),
+:global(.react-datepicker__day-name),
+:global(.react-datepicker__current-month) {
+    color: var(--jasmine) !important;
+}
+
+:global(.react-datepicker-popper) {
+  z-index: 9999 !important;
+  
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
     height: 45px;
     flex: 1;
-    min-width: 300px;
+    min-width: 150px;
+    width: 20vw;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;
     outline: none;
@@ -55,12 +128,17 @@ input:-webkit-autofill {
 }
 
 .searchButton {
+    display: flex;
     background: var(--black-olive);
     font-size: 1rem;
+    text-align: center;
+    justify-content: center;
     color: var(--olive);
-    margin-left: 1rem;
+    margin: 1rem;
     padding: 0.75rem 2rem;
     height: 45px;
+    width: 12vw;
+    min-width: 10vw;
     box-sizing: border-box;
     flex-shrink: 0;
     border: 1px solid var(--raw-umber);
@@ -68,6 +146,7 @@ input:-webkit-autofill {
     transition: all 0.5s ease;
     cursor: pointer;
     white-space: nowrap;
+
 }
 
 .searchButton:hover {
@@ -192,6 +271,22 @@ input:-webkit-autofill {
     box-shadow: 0 2px 10px var(--jasmine);
 }
 
+@media (max-width: 900px)
+{
+.searchContainer form{
+        flex-direction: column;
+
+    }
+    .search {
+        width: 250px;
+    }
+
+    .searchButton {
+        width: 150px;
+    }
+}
+
+
 @media (max-width: 768px) {
 
     .mainContainer,
@@ -212,5 +307,6 @@ input:-webkit-autofill {
         padding: 15px;
     }
 
+    
 
 }

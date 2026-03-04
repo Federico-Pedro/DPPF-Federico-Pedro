@@ -1,0 +1,69 @@
+package com.rustica.reservas.service;
+
+import com.rustica.reservas.entity.Category;
+
+import com.rustica.reservas.exception.UserAlreadyExistsException;
+import com.rustica.reservas.repository.CategoryRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CategoryService {
+
+    private final CategoryRepository categoryRepository;
+
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+
+    }
+
+    public Category createCategory(String name, String description, String image) {
+
+        if (categoryRepository.existsByName(name)) {
+            throw new UserAlreadyExistsException("Esta categoria ya existe");
+        }
+
+        Category newCategory = new Category();
+        newCategory.setName(name);
+        newCategory.setDescription(description);
+        newCategory.setImage(image);
+
+        Category savedCategory = categoryRepository.save(newCategory);
+
+        return savedCategory;
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+    }
+
+    public Category updateCategory(Long id, String name, String description, String image) {
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+
+        existingCategory.setName(name);
+        existingCategory.setDescription(description);
+        existingCategory.setImage(image);
+
+
+        return categoryRepository.save(existingCategory);
+    }
+
+    public void deleteCategory(Long id) {
+
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Caracteristica no encontrada");
+        }
+
+        categoryRepository.deleteById(id);
+    }
+
+}
+
+

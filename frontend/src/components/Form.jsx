@@ -35,19 +35,25 @@ function CreateProduct() {
     }, [id]);
 
     //Trae las características de la base de datos 
+
     useEffect(() => {
-        const fetchCharacteristics = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/characteristics');
-                setCharacteristics(response.data)
-
+                const [categoriesRes, characteristicsRes] = await Promise.all([
+                    axios.get('http://localhost:8080/api/categories'),
+                    axios.get('http://localhost:8080/api/characteristics')
+                ]);
+                setCategories(categoriesRes.data);
+                setCharacteristics(characteristicsRes.data);
             } catch (error) {
-                console.error('Error al cargar características', error);
+                console.error(error);
             }
-        };
+        }
+        fetchData();
+    }, [])
 
-        fetchCharacteristics();
-    }, []);
+
+
 
     const navigate = useNavigate()
     const [productName, setProductName] = useState('')
@@ -55,6 +61,7 @@ function CreateProduct() {
     const [productCategory, setProductCategory] = useState('')
     const [selectedCharacteristics, setSelectedCharacteristics] = useState([])
     const [characteristics, setCharacteristics] = useState([])
+    const [categories, setCategories] = useState([])
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -90,8 +97,18 @@ function CreateProduct() {
         setError('');
 
 
+        //VALIDACIONES EN EL FRONT
         if (!productName.trim()) {
             setError('El nombre es obligatorio');
+            return;
+        }
+        if (!description.trim()) {
+            setError('La descripción es obligatoria');
+            return;
+        }
+
+        if (selectedFile.length === 0 && !editing) {
+            setError('Debe agregar al menos una imagen');
             return;
         }
 
@@ -173,7 +190,7 @@ function CreateProduct() {
                 <label htmlFor="productDescription"> Descripción del producto
                     <textarea
                         value={description}
-                        rows='4'
+                        rows='6'
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Descripción del producto"
                         id="productDescription" />
@@ -181,66 +198,46 @@ function CreateProduct() {
 
                 <div className={styles.form}>
                     <label className={styles.titleContainer}>Categoría del producto</label>
+
                     <div className={styles.categoryContainer}>
+                        {categories.map(c => (
+                            <label htmlFor={c.name}>
+                                <input
+                                    type="radio"
+                                    id={c.id}
+                                    name={c.name}
+                                    value={c.name}
+                                    checked={productCategory === c.name}
+                                    onChange={(e) => setProductCategory(e.target.value)}
+                                />
+                                {c.name}
+                            </label>
+                        ))}
 
-                        <label htmlFor="individual">
-                            <input
-                                type="radio"
-                                id="individual"
-                                name="productCategory"
-                                value="Individual"
-                                checked={productCategory === "Individual"}
-                                onChange={(e) => setProductCategory(e.target.value)}
-                            />
-                            Individual
-                        </label>
-
-                        <label htmlFor="doble">
-                            <input
-                                type="radio"
-                                id="doble"
-                                name="productCategory"
-                                value="Doble"
-                                checked={productCategory === "Doble"}
-                                onChange={(e) => setProductCategory(e.target.value)}
-                            />
-                            Doble
-                        </label>
-
-                        <label htmlFor="multiple">
-                            <input
-                                type="radio"
-                                id="multiple"
-                                name="productCategory"
-                                value="Multiple"
-                                checked={productCategory === "Multiple"}
-                                onChange={(e) => setProductCategory(e.target.value)}
-                            />
-                            Múltiple
-                        </label>
                     </div>
+
                     <label>Características del producto</label>
                     <div className={styles.characteristicsContainer}>
                         {characteristics.map(char => (
-                            
+
                             <label htmlFor={char.id}>{char.name}
 
-                            <input
-                                type="checkbox"
-                                id={char.id}
-                                name={char.name}
-                                value={char.id}
-                                checked={selectedCharacteristics.includes(char.id)}
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    if (e.target.checked) {
-                                        setSelectedCharacteristics(prev => [...prev, value]);
-                                    } else {
-                                        setSelectedCharacteristics(prev => prev.filter(id => id !== value));
-                                    }
-                                }}
-                            />
-                        </label>
+                                <input
+                                    type="checkbox"
+                                    id={char.id}
+                                    name={char.name}
+                                    value={char.id}
+                                    checked={selectedCharacteristics.includes(char.id)}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        if (e.target.checked) {
+                                            setSelectedCharacteristics(prev => [...prev, value]);
+                                        } else {
+                                            setSelectedCharacteristics(prev => prev.filter(id => id !== value));
+                                        }
+                                    }}
+                                />
+                            </label>
                         ))}
                     </div>
                 </div>

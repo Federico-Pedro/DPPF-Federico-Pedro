@@ -6,6 +6,11 @@ import com.rustica.reservas.repository.ProductRepository;
 import com.rustica.reservas.repository.CharacteristicRepository;
 import org.springframework.stereotype.Service;
 import com.rustica.reservas.exception.ProductAlreadyExistsException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -64,10 +69,25 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
 
-        if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Cannot delete: Product not found with ID: " + id);
-        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cannot delete: Product not found with ID: " + id));
+        //ELIMINA ARCHIVOS DE IMAGENES ANTES DE BORRAR EL PRODUCTO DE LA BASE DE DATOS
 
+        //Crea el path absoluto a la carpeta imagenes
+        Path uploadPath = Paths.get(System.getProperty("user.dir"), "..", "frontend", "public", "images").normalize();
+
+        try {
+            for (String imageUrl : product.getImages()) {
+                //Quita el /images/ dejando solo el nombre del archivo
+                String filename = imageUrl.replace("/images/", "");
+                //crea la direccion del archivo
+                Path filePath = uploadPath.resolve(filename);
+                //elimina el archivo si existe
+                Files.deleteIfExists(filePath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         productRepository.deleteById(id);
     }
 

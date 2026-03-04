@@ -9,7 +9,7 @@
 .filterContainer {
     display: flex;
     justify-content: center;
-    width: 50vw;
+    width: 60vw;
     justify-self: center;
     color: var(--olive);
     font-size: 1rem;

@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ProductList.module.css'
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom'
 
 
 
-function ProductList() {
-
+function ProductList({ filteredResults }) {
+    const navigate = useNavigate()
     const { user } = useAuth()
 
     const [activeFilters, setActiveFilters] = useState([]);
@@ -21,7 +22,7 @@ function ProductList() {
     const productsPerPage = 10;
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    
+
 
     //Este useEffect trae todos los productos de la base de datos (simulando un delay de 1.5 seg), los cololca en la variable products, luego la funcion getRandomProducts los mezcla y los coloca en randomProducts
     useEffect(() => {
@@ -40,15 +41,31 @@ function ProductList() {
         };
 
         fetchProducts();
+
+
     }, []);
 
-    //Esta variable contiene los productos filtrados (ya mezclados aleatoriamente) segun que botones estan clickeados
-    const filteredProducts = activeFilters.length === 0
-        ? randomProducts
-        : randomProducts.filter(p => activeFilters.includes(p.category));
+
+    let filteredProducts;
+
+    //FUNCION QUE MANEJA LOS PRODUCTOS QUE SE MUESTRAN SEGÚN QUE FILTROS ESTÁN ACTIVOS
+    const filtrar = () => {
+
+        if (filteredResults && (activeFilters.length > 0)) {
+            filteredProducts = products.filter(p => p.description.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
+        } else if (!filteredResults && (activeFilters.length > 0)) {
+            filteredProducts = products.filter(p => activeFilters.includes(p.category))
+        } else if (filteredResults) {
+            filteredProducts = products.filter(p => p.description.toLowerCase().includes(filteredResults.toLowerCase()))
+
+        } else {
+            filteredProducts = randomProducts
+        }
+        return filteredProducts;
+    }
 
     //Acá se hace un slice de 10 productos teniendo en cuenta la página en que nos encontamos y se colocan en currentProducts (que es la variable que se mapea en el renderizado)
-
+    filtrar()
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
@@ -76,6 +93,7 @@ function ProductList() {
         setActiveFilters(prev =>
             prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
         )
+        filtrar()
     }
 
     const confirmDelete = async () => {
@@ -128,7 +146,7 @@ function ProductList() {
                 <button className={activeFilters.includes('Multiple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Multiple')}>Multiple</button>
             </div>
             <div className={styles.counter}>
-                Cantidad de productos: {filteredProducts.length} / {products.length}
+                Mostrando {filteredProducts.length} / {products.length} productos
             </div>
 
 
