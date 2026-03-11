@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface CharacteristicRepository extends JpaRepository<Characteristic, Long> {
 
 
-    Optional<Characteristic> findByid(Long id);
+    Optional<Characteristic> findById(Long id);
 
 
     void deleteById(Long id);

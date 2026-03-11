@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 function ProductList({ filteredResults }) {
+    console.log("En la lista:" + filteredResults)
     const navigate = useNavigate()
     const { user } = useAuth()
 
@@ -52,11 +53,11 @@ function ProductList({ filteredResults }) {
     const filtrar = () => {
 
         if (filteredResults && (activeFilters.length > 0)) {
-            filteredProducts = products.filter(p => p.description.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
+            filteredProducts = products.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
         } else if (!filteredResults && (activeFilters.length > 0)) {
             filteredProducts = products.filter(p => activeFilters.includes(p.category))
         } else if (filteredResults) {
-            filteredProducts = products.filter(p => p.description.toLowerCase().includes(filteredResults.toLowerCase()))
+            filteredProducts = products.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase()))
 
         } else {
             filteredProducts = randomProducts

@@ -14,7 +14,7 @@ function Body() {
     const [products, setProducts] = useState([])
     const [searchText, setSearchText] = useState('')
     const [suggestions, setSuggestions] = useState([])
-    const [filteredResults, setFiltedredResults] = useState('')
+    const [filteredResults, setFiltedredResults] = useState('') //Esto se pasa como prop a ProductList
 
 
     useEffect(() => {
@@ -33,6 +33,7 @@ function Body() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         await setFiltedredResults(searchText)
+        console.log(filteredResults)
         setSuggestions([])
 
     }
@@ -53,7 +54,14 @@ function Body() {
                     <div>
 
                         <label htmlFor="search">
-                            <input type="text" name="search" id="search" placeholder="Ingrese su busqueda" autoComplete="off" className={styles.search}
+                            <input
+                                type="text"
+                                name="search"
+                                id="search"
+                                placeholder="Ingrese su busqueda"
+                                autoComplete="off"
+                                className={styles.search}
+                                value={searchText}
                                 onChange={(e) => {
                                     const value = e.target.value
                                     setSearchText(value)
@@ -61,15 +69,18 @@ function Body() {
                                         setSuggestions(products.filter(p =>
                                             p.description.toLowerCase().includes(value.toLowerCase())
                                         ))
-
+                                    
                                     } else {
                                         setSuggestions([])
+                                        setFiltedredResults('')
                                     }
                                 }}
                             />
                         </label>
 
                         <div>
+
+                            {/* FALTA IMPLEMENTAR LA FECHA SELECCIONADA COMO PARÁMETRO EN LA BUSQUEDA */}
 
                             <DatePicker
                                 placeholderText="Seleccionar fecha"
@@ -96,7 +107,13 @@ function Body() {
                 {suggestions.length > 0 &&
 
                     <div className={styles.sugerencias}>Sugerencias: {
-                        suggestions.map(s => (<p key={s.id}>{s.name}</p>))
+                        suggestions.map(s => (<p key={s.id}
+                            onClick={() => {
+                                setSearchText(s.name)
+                                setSuggestions([])
+                            }
+                            }
+                        >{s.name}</p>))
                     } </div>
                 }
             </div>

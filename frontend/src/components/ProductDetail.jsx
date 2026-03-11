@@ -1,25 +1,74 @@
 import styles from './ProductDetail.module.css'
+import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker'
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import { es } from 'date-fns/locale/es';
+registerLocale('es', es)
 
 
 
 const ProductDetail = () => {
     const [product, setProduct] = useState(null);
+    const [selectedDate, setSelectedDate] = useState('')
+    const [reservedDates, setReservedDates] = useState([])
+    const [success, setSuccess] = useState('')
+    const [error, setError] = useState('')
     const { id } = useParams();
+    const { user } = useAuth()
 
     useEffect(() => {
         axios.get(`http://localhost:8080/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
-                console.log(response.data)
-           })
+            })
             .catch(error => {
                 console.error('Error fetching product:', error);
             });
+
+        //TRAE TODAS LAS FECHAS EN QUE ESTE PRODUCTO SE ENCUENTRA RESERVADO
+        axios.get(`http://localhost:8080/api/reservations/product/${id}`)
+            .then(response => setReservedDates(response.data.map(date => new Date(date))))
+            .catch(error => setError(error));
+
     }, [id]);
+
+    console.log(reservedDates)
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) {
+            alert('Debes iniciar sesión para hacer una reserva');
+            return;
+        }
+        const reservationData = {
+            date: selectedDate,
+            productId: product.id,
+            userId: user.id
+
+        }
+        const response = await axios.post('http://localhost:8080/api/reservations', reservationData);
+        setSuccess(`Reserva de "${response.data.product.name}" para el día: "${response.data.date}" creada exitosamente!`);
+        console.log(success)
+    }
+
+    const fetchData = () => {
+        setError(false)
+        axios.get(`http://localhost:8080/api/products/${id}`)
+            .then(response => setProduct(response.data))
+            .catch(() => setError(true))
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [id])
+
+
 
     if (!product) {
         return (<div style={{ textAlign: 'center', padding: '20px', color: 'white' }}>
@@ -28,7 +77,7 @@ const ProductDetail = () => {
 
         </div>)
     }
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.titleContainer}>
@@ -58,7 +107,7 @@ const ProductDetail = () => {
                     className={styles.productLink}
                 >
 
-                <p>Ver mas</p>
+                    <p>Ver mas</p>
                 </Link>
             </div>
             <div className={styles.productDescription}>
@@ -70,16 +119,36 @@ const ProductDetail = () => {
 
                 <div className={styles.iconsContainer}>
                     {product.characteristics.map(char =>
-                   
+
                         <div className={styles.charContainer} key={char.id}>
-                        <i className={`bi ${char.icon}`} ></i>
-                        <p>{char.name}</p>
+                            <i className={`bi ${char.icon}`} ></i>
+                            <p>{char.name}</p>
                         </div>
-                    
-                    
-                )}
+
+                    )}
                 </div>
+
             </div>
+
+            <DatePicker
+                placeholderText="Seleccionar fecha"
+                locale="es"
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                monthsShown={2}
+                dateFormat="dd/MM/yyyy"
+                excludeDates={reservedDates}
+
+                inline
+            />
+            {success && <h3 className={styles.success}>{success}</h3>}
+            {error &&
+                <div>
+                    <h3 className={styles.error}>{error}</h3>
+                    <button className={styles.button} onClick={fetchData}>Reintentar</button>
+                </div>
+            }
+            <button type="button" className={styles.button} onClick={handleSubmit}>Reservar</button>
         </div>
     );
 };

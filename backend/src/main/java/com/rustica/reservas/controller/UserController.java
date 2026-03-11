@@ -60,6 +60,7 @@ public class UserController {
             String token = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
 
             Map<String, Object> response = new HashMap<>();
+            response.put("id", user.getId());
             response.put("token", token);
             response.put("name", user.getName());
             response.put("lastName", user.getLastName());
