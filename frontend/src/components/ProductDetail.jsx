@@ -31,31 +31,44 @@ const ProductDetail = () => {
 
         //TRAE TODAS LAS FECHAS EN QUE ESTE PRODUCTO SE ENCUENTRA RESERVADO
         axios.get(`http://localhost:8080/api/reservations/product/${id}`)
-            .then(response => setReservedDates(response.data.map(date => new Date(date))))
+            .then(response => setReservedDates(response.data.map(date => {
+                const [year, month, day] = date.split('-')
+                const d = new Date(year, month - 1, day)
+                d.setHours(12, 0, 0, 0)
+                return d
+            })))
             .catch(error => setError(error));
 
     }, [id]);
 
-    console.log(reservedDates)
-
-
+    console.log("Fechas reservadas para este producto: ", reservedDates)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) {
-            alert('Debes iniciar sesión para hacer una reserva');
+            setError('Debes iniciar sesión para hacer una reserva');
             return;
         }
-        const reservationData = {
-            date: selectedDate,
-            productId: product.id,
-            userId: user.id
-
+        if (!selectedDate) {
+            setError('Debes seleccionar una fecha');
+            return;
         }
-        const response = await axios.post('http://localhost:8080/api/reservations', reservationData);
-        setSuccess(`Reserva de "${response.data.product.name}" para el día: "${response.data.date}" creada exitosamente!`);
-        console.log(success)
+        try {
+            const reservationData = {
+                date: selectedDate,
+                productId: product.id,
+                userId: user.id
+            }
+            const response = await axios.post('http://localhost:8080/api/reservations', reservationData);
+            setSuccess(`Reserva de "${response.data.product.name}" para el día: "${response.data.date}" creada exitosamente!`);
+        } catch (error) {
+            console.error(error);
+            setError('Error al crear la reserva')
+        }
     }
+
+
+
 
     const fetchData = () => {
         setError(false)

@@ -163,7 +163,12 @@
 }
 
 .success {
-    color: green;
+    color: rgb(65, 168, 65);
+    font-size: 1.5rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.error {
+    color: rgb(196, 52, 52);
     font-size: 1.5rem;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

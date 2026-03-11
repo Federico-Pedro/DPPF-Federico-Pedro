@@ -47,6 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/characteristics/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reservations").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reservations/product/**").permitAll()
 
                         .anyRequest().hasRole("ADMIN")

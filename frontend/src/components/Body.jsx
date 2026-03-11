@@ -11,6 +11,7 @@ registerLocale('es', es)
 function Body() {
 
     const [selectedDate, setSelectedDate] = useState(null)
+    const [propDate, setPropDate] = useState(null)
     const [products, setProducts] = useState([])
     const [searchText, setSearchText] = useState('')
     const [suggestions, setSuggestions] = useState([])
@@ -33,6 +34,7 @@ function Body() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         await setFiltedredResults(searchText)
+        await setPropDate(selectedDate)
         console.log(filteredResults)
         setSuggestions([])
 
@@ -124,7 +126,7 @@ function Body() {
                     <div className={styles.titleContainer}><h2>Productos</h2></div>
 
 
-                    <ProductList filteredResults={filteredResults} />
+                    <ProductList filteredResults={filteredResults} propDate={propDate} />
 
                 </div>
 

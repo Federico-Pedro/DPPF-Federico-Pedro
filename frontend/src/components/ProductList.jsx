@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom'
 
 
 
-function ProductList({ filteredResults }) {
-    console.log("En la lista:" + filteredResults)
+function ProductList({ filteredResults, propDate }) {
+
     const navigate = useNavigate()
     const { user } = useAuth()
 
@@ -18,7 +18,9 @@ function ProductList({ filteredResults }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null)
+    const [productToDelete, setProductToDelete] = useState(null);
+    const [reservations, setReservations] = useState([])
+    const [productsByDate, setProductsByDate] = useState([])
 
     const productsPerPage = 10;
     const indexOfLastProduct = currentPage * productsPerPage;
@@ -34,6 +36,8 @@ function ProductList({ filteredResults }) {
                 setProducts(response.data)
                 const random = getRandomProducts(response.data);
                 setRandomProducts(random);
+
+
             } catch (error) {
                 console.error('Error al cargar productos', error);
             } finally {
@@ -47,22 +51,68 @@ function ProductList({ filteredResults }) {
     }, []);
 
 
+
+
+    //TRAE RESERVATIONS Y EXTRAE LOS ELEMENTOS QUE CONTENGAN LA FECHA QUE LLEGA POR PROP,
+    //LUEGO EXTRAE LOS ID DE LOS PRODUCTOS QUE COINCIDEN CON ESA FECHA PARA SER COMPARADOS EN
+    //EL FILTRO SIIGUIENTE
+    const fetchReservations = async () => {
+        try {
+            const reserves = await axios.get('http://localhost:8080/api/reservations')
+            const formattedDate = propDate ? propDate.toISOString().split('T')[0] : null
+
+            const filtered = reserves.data.filter(r => r.date === formattedDate)
+            setReservations(filtered)
+            const byDate = filtered.map(r => r.product.id)
+            console.log("PRODUCTOS BY DATE " ,byDate)
+            setProductsByDate(byDate)
+
+
+
+        } catch (error) {
+            console.error('Error al cargar reservas', error);
+        }
+    }
+
+
+
+    useEffect(() => {
+        if (!propDate) return
+        fetchReservations();
+    }, [propDate])
+
+
+
     let filteredProducts;
 
     //FUNCION QUE MANEJA LOS PRODUCTOS QUE SE MUESTRAN SEGÚN QUE FILTROS ESTÁN ACTIVOS
     const filtrar = () => {
 
-        if (filteredResults && (activeFilters.length > 0)) {
-            filteredProducts = products.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
-        } else if (!filteredResults && (activeFilters.length > 0)) {
-            filteredProducts = products.filter(p => activeFilters.includes(p.category))
-        } else if (filteredResults) {
-            filteredProducts = products.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase()))
+        //SI LLEGA UNA FECHA POR PROP REALIZA UN PRIMER FILTRADO DEJANDO SOLO LOS PRODUCTOS
+        //QUE NO ESTÁN EN LA TABLA DE RESERVAS PARA LA FECHA SELECCIONADA
+        if (propDate) {
 
+            filteredProducts = products.filter(p => !productsByDate.includes(p.id))
+            console.log(filteredProducts)
         } else {
             filteredProducts = randomProducts
         }
-        return filteredProducts;
+
+        //LUEGO CONTINUA CON EL FILTRADO POR PALABRAS CLAVE Y POR BOTONES DE FILTROS SEGUN CARACTERISTICAS
+
+        if (filteredResults && (activeFilters.length > 0)) {
+            return filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
+
+        } else if (!filteredResults && (activeFilters.length > 0)) {
+            return filteredProducts = filteredProducts.filter(p => activeFilters.includes(p.category))
+
+        } else if (filteredResults) {
+            return filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase()))
+
+        } else {
+            return filteredProducts
+        }
+
     }
 
     //Acá se hace un slice de 10 productos teniendo en cuenta la página en que nos encontamos y se colocan en currentProducts (que es la variable que se mapea en el renderizado)
@@ -84,12 +134,14 @@ function ProductList({ filteredResults }) {
     };
 
 
+    //CLICK PARA SETEAR PRODUCTO A ELIMINAR
     const handleClick = (product) => {
         setShowModal(true);
         setProductToDelete(product)
 
     }
 
+    //FILTRO DE LOS BOTONES SEGUN CARACTERÍSTICAS
     const handleFilterClick = (filter) => {
         setActiveFilters(prev =>
             prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
