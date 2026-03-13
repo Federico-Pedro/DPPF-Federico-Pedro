@@ -64,7 +64,7 @@ function ProductList({ filteredResults, propDate }) {
             const filtered = reserves.data.filter(r => r.date === formattedDate)
             setReservations(filtered)
             const byDate = filtered.map(r => r.product.id)
-            console.log("PRODUCTOS BY DATE " ,byDate)
+            console.log("PRODUCTOS BY DATE ", byDate)
             setProductsByDate(byDate)
 
 
@@ -167,6 +167,67 @@ function ProductList({ filteredResults, propDate }) {
     }
 
 
+
+
+
+    //TRAE TODOS LOS FAVORITOS DE LA BASE DE DATOS
+
+    const [favorites, setFavorites] = useState([])
+
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+
+                //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
+                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+
+                //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
+                setFavorites(response.data.map(p => p.id))
+
+                console.log("Todos los favoritos: ", response.data)
+
+            } catch (error) {
+                console.error('Error al cargar favoritos', error);
+            }
+        };
+
+        fetchFavorites();
+
+    }, []);
+
+
+
+    //FUNCION PARA AGREGAR PRODUCTO A FAVORITOS
+
+    const handleFavorite = async (productId) => {
+
+        if (!favorites.includes(productId)) {
+
+            try {
+                const favoriteData = {
+                    productId: productId,
+                    userId: user.id
+                }
+                await axios.post(`http://localhost:8080/api/favorites`, favoriteData)
+
+                setFavorites(prev => [...prev, productId])
+                
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            try {
+
+                await axios.delete(`http://localhost:8080/api/favorites/product/${productId}`)
+                setFavorites(prev => prev.filter(id => id !== productId))
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    
     if (showModal) {
         return (
             <div className={styles.modal}>
@@ -206,13 +267,23 @@ function ProductList({ filteredResults, propDate }) {
             <div className={styles.cardContainer}>
                 {currentProducts.map(product => (
 
-                    <Link
-                        to={`/product/${product.id}`}
-                        key={product.id}
-                        className={styles.productLink}
-                    >
-                        <div key={product.id} className={styles.card}>
+
+                    <div key={product.id} className={styles.card}>
+                        <div className={styles.productNameContainer}>
                             <h3>{product.name}</h3>
+
+                            {favorites.includes(product.id)
+                                ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
+                                : <i className="bi bi-heart" onClick={() => handleFavorite(product.id)}></i>
+                            }
+
+
+                        </div>
+                        <Link
+                            to={`/product/${product.id}`}
+                            key={product.id}
+                            className={styles.productLink}
+                        >
                             <div className={styles.imageContainer}>
                                 {product.images && product.images.length > 0 && (
                                     <img
@@ -227,35 +298,32 @@ function ProductList({ filteredResults, propDate }) {
 
                                 <p>{product.description}</p>
                             </div>
-                            {user && user.role === 'admin' &&
-                                <>
-                                    <div className={styles.buttonContainer}>
-                                        <button
-                                            className={styles.adminButton}
-                                            onClick={(e) => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                navigate(`/form/edit/${product.id}`)
-                                            }}
-                                        >
-                                            Editar
-                                        </button>
-                                        <button className={styles.adminButton} onClick={((e) => {
+                        </Link>
+                        {user && user.role === 'admin' &&
+                            <>
+                                <div className={styles.buttonContainer}>
+                                    <button
+                                        className={styles.adminButton}
+                                        onClick={(e) => {
                                             e.preventDefault()
                                             e.stopPropagation()
-                                            handleClick(product)
-                                        })}>Borrar</button>
+                                            navigate(`/form/edit/${product.id}`)
+                                        }}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button className={styles.adminButton} onClick={((e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        handleClick(product)
+                                    })}>Borrar</button>
 
-                                    </div>
+                                </div>
 
-
-
-
-
-                                </>
-                            }
-                        </div>
-                    </Link>))}
+                            </>
+                        }
+                    </div>
+                ))}
             </div>
             <div className={styles.paginationContainer}>
                 <button

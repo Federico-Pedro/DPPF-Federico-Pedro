@@ -1,8 +1,8 @@
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
 }
 
 .header {
@@ -12,7 +12,7 @@ body {
   padding: 1.5rem 0;
   box-shadow: 0 2px 6px rgb(12, 12, 12);
   max-height: 145px;
-  width: 100vw; 
+  width: 100vw;
   position: fixed;
   z-index: 999999
 }
@@ -26,7 +26,7 @@ body {
   align-items: center;
 }
 
-.subContainer{
+.subContainer {
   display: flex;
 
 }
@@ -72,28 +72,44 @@ body {
   opacity: 0.7;
 }
 
+.userLoggedContainer{ 
+  display: flex;
+  align-items: center;
+ 
+}
+
 .userName {
+  border: 2px solid var(--jasmine);
+  box-sizing: border-box;
+  padding: 5px;
+  color: var(--jasmine);
+  border-radius: 50%;
   font-size: 2rem;
-  font-weight: 300;
-  margin-left: 25px;
-  color: var(--jasmine)
+  font-family:'Times New Roman', Times, serif ;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+ 
 }
 
 
 .logout {
   background: var(--raw-umber);
-    font-size: 1rem;
-    color: var(--bistre);
-    margin: 2rem;
-    height: 35px;
-    width: 120px;
-    box-sizing: border-box;
-    flex-shrink: 0;
-    border: 1px solid var(--raw-umber);
-    border-radius: 8px;
-    transition: all 0.8s ease;
-    cursor: pointer;
-    white-space: nowrap;
+  font-size: 1rem;
+  color: var(--bistre);
+  margin: 2rem;
+  height: 35px;
+  width: 120px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border: 1px solid var(--raw-umber);
+  border-radius: 8px;
+  transition: all 0.8s ease;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .logout:hover {
