@@ -13,7 +13,7 @@ import Profile from './components/Profile'
 import UsersTable from './components/UsersTable'
 import Characteristics from './components/Characteristics'
 import Category from './components/Category'
-
+import FavoritesList from './components/FavoritesList'
 
 import './App.css'
  
@@ -37,6 +37,7 @@ function App() {
       <Route path="/usersTable" element={<UsersTable />} />
       <Route path="/characteristics" element={<Characteristics />} />
       <Route path="/category" element={<Category />} />
+      <Route path="/favorites" element={<FavoritesList />} />
       
       </Routes>
       <Footer />

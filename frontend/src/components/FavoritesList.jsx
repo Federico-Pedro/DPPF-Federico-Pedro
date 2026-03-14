@@ -1,0 +1,106 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import styles from './FavoritesList.module.css'
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom'
+
+function FavoritesTable() {
+    const { user } = useAuth()
+    if (!user) return <Navigate to="/" />
+    const [favorites, setFavorites] = useState([]);
+    console.log(favorites)
+    const [showModal, setShowModal] = useState(false);
+    const [favoriteToDelete, setFavoriteToDelete] = useState(null)
+    console.log("QUE HAY EN FAVORITE TO DELETE: ", favoriteToDelete)
+    console.log(favorites)
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+
+                setFavorites(response.data)
+
+
+            } catch (error) {
+                console.error('Error al cargar productos', error);
+            }
+        };
+
+        fetchFavorites();
+
+    }, []);
+
+    const handleClick = (favorite) => {
+        setShowModal(true);
+        setFavoriteToDelete(favorite)
+        console.log(favorite)
+    }
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/favorites/product/${favoriteToDelete}`);
+            setShowModal(false)
+            setFavorites(prev => prev.filter(f => f.id !== favoriteToDelete))
+            setFavoriteToDelete(null)
+
+        }
+        catch (error) {
+            console.error("Se produjo un error: ", error)
+        }
+    }
+
+    const cancelDelete = () => {
+        setShowModal(false);
+        setProductToDelete(null)
+    }
+
+
+    if (showModal) {
+        return (
+            <div style={{ textAlign: 'center', padding: '200px', color: 'white' }}>
+                <h2>¿Está seguro que desea eliminar de favoritos: {favoriteToDelete.name}?</h2>
+
+                <div>
+                    <button className={styles.adminButton} onClick={() => confirmDelete(favoriteToDelete.id)}>Eliminar</button>
+                    <button className={styles.adminButton} onClick={() => cancelDelete()}>Cancelar</button>
+                </div>
+            </div>
+        )
+    }
+
+
+
+    return (
+        <div className={styles.body}>
+            <table>
+                <thead className={styles.tableHead}>
+                    <tr>
+                        <th className={styles.th}>ID</th>
+                        <th className={styles.th}>Nombre</th>
+                        <th className={styles.th}>Categoría</th>
+                        <th className={styles.th}>Características</th>
+                        <th className={styles.th}>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody className={styles.tableBody}>
+                    {favorites.map(f => (
+                        <tr key={f.id}>
+                            <td className={styles.cell}>{f.id}</td>
+                            <td className={styles.cell}>{f.name}</td>
+                            <td className={styles.cell}>{f.category}</td>
+                            <td className={styles.cell}>{f.characteristics.map(char => (<i className={`bi ${char.icon}`} key={char.id}></i>))}</td>
+                            <td className={styles.buttonCell}>
+
+                                <button className={styles.deleteButton} onClick={() => handleClick(f.id)}>Borrar</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+        </div>)
+
+}
+
+export default FavoritesTable

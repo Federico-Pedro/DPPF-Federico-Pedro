@@ -67,9 +67,6 @@ const ProductDetail = () => {
         }
     }
 
-
-
-
     const fetchData = () => {
         setError(false)
         axios.get(`http://localhost:8080/api/products/${id}`)
@@ -80,6 +77,59 @@ const ProductDetail = () => {
     useEffect(() => {
         fetchData()
     }, [id])
+
+
+    const [favorites, setFavorites] = useState([])
+console.log("Id de los productos favoritos", favorites)
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+
+                //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
+                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+
+                //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
+                setFavorites(response.data.map(p => p.id))
+
+                console.log("Todos los favoritos: ", response.data)
+
+            } catch (error) {
+                console.error('Error al cargar favoritos', error);
+            }
+        };
+
+        fetchFavorites();
+
+    }, []);
+
+
+    const handleFavorite = async (productId) => {
+
+        if (!favorites.includes(productId)) {
+
+            try {
+                const favoriteData = {
+                    productId: productId,
+                    userId: user.id
+                }
+                await axios.post(`http://localhost:8080/api/favorites`, favoriteData)
+
+                setFavorites(prev => [...prev, productId])
+                
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            try {
+
+                await axios.delete(`http://localhost:8080/api/favorites/product/${productId}`)
+                setFavorites(prev => prev.filter(id => id !== productId))
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
 
 
 
@@ -94,7 +144,16 @@ const ProductDetail = () => {
     return (
         <div className={styles.container}>
             <div className={styles.titleContainer}>
+
+                <div className={styles.productNameContainer}>
+
                 <h1>{product.name}</h1>
+
+                {favorites.includes(product.id)
+                    ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
+                    : <i className="bi bi-heart" onClick={() => handleFavorite(product.id)}></i>
+                }
+                </div>
                 <Link
                     to={`/`}
                     className={styles.productLink}

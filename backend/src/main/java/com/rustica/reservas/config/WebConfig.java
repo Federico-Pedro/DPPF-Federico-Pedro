@@ -54,6 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.DELETE, "/api/favorites/product/**").authenticated()
 
 
+
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

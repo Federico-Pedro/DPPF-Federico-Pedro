@@ -27,9 +27,32 @@
     /* padding: 10px 0 10px 0; */
     color: var(--olive);
     overflow: hidden;
-    
+    padding: 0px 8px;
+      
+}
+
+.productNameContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    color: rgb(165, 54, 54);
+    font-size: 1.5rem;
+    z-index: 999;
     
 }
+
+.productNameContainer i {
+    cursor: pointer;
+    transition: all 0.5s ease;
+    margin-right: 50px;
+}
+
+.productNameContainer i:hover {
+    color: rgb(226, 35, 35);
+}
+
 .back{
     height: 40px;
     width: auto;
