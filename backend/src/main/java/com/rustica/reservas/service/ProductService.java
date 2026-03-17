@@ -24,7 +24,7 @@ public class ProductService {
         this.characteristicRepository = characteristicRepository;
     }
 
-    public Product createProduct(String name, String description, List<String> images, String category, List<Long> characteristicIds) {
+    public Product createProduct(String name, String description, List<String> images, String category, List<Long> characteristicIds, List<String> politics) {
 
         if (productRepository.existsByName(name)) {
             throw new ProductAlreadyExistsException("Ya existe un producto con el nombre: " + name);
@@ -38,6 +38,7 @@ public class ProductService {
         newProduct.setCategory(category);
         List<Characteristic> characteristics = characteristicRepository.findAllById(characteristicIds);
         newProduct.setCharacteristics(characteristics);
+        newProduct.setPolitics(politics);
 
         Product savedProduct = productRepository.save(newProduct);
 
@@ -53,7 +54,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
     }
 
-    public Product updateProduct(Long id, String name, String description, List<String> images, String category, List<Long> characteristicIds) {
+    public Product updateProduct(Long id, String name, String description, List<String> images, String category, List<Long> characteristicIds, List<String> politics) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
 
@@ -63,6 +64,7 @@ public class ProductService {
         existingProduct.setCategory(category);
         List<Characteristic> characteristics = characteristicRepository.findAllById(characteristicIds);
         existingProduct.setCharacteristics(characteristics);
+        existingProduct.setPolitics(politics);
 
         return productRepository.save(existingProduct);
     }

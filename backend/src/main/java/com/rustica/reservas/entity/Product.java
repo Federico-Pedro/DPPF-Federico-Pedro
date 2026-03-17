@@ -50,4 +50,10 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
+
+    @ElementCollection
+    @CollectionTable(name = "product_politics", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "politic", columnDefinition = "TEXT")
+    private List<String> politics;
+
 }

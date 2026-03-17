@@ -16,12 +16,12 @@
 .adminContainer h2 {
     padding: 15px;
     width: 100%;
-    
     color: var(--jasmine);
     font-family: 'Arial', sans-serif;
     font-size: 2rem;
 
 }
+
 .success,
 .error {
     color: var(--jasmine);
@@ -32,6 +32,7 @@
 .success {
     color: rgb(10, 116, 27)
 }
+
 .error {
     color: rgb(138, 29, 29)
 }
@@ -83,10 +84,10 @@ textarea {
 textarea:focus {
     outline: none;
     border: 2px solid var(--raw-umber);
-   
+
 }
 
-.categoryContainer{
+.categoryContainer {
     display: flex;
     padding: 5px;
     border: 1px solid var(--raw-umber);
@@ -96,13 +97,12 @@ textarea:focus {
 }
 
 .categoryContainer label input {
-    margin:5px;
+    margin: 5px;
 }
 
-.characteristicsContainer{
+.characteristicsContainer {
     display: flex;
     padding: 5px;
-    margin-top: 25px;
     border: 1px solid var(--raw-umber);
     border-radius: 8px;
     width: 80%;
@@ -111,26 +111,61 @@ textarea:focus {
 }
 
 
+
+.imagesContainer {
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    height: 100px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: calc(65vw * 0.6);
+    margin-top: 50px;
+    color: var(--jasmine);
+    font-family: 'Arial', sans-serif;
+    font-size: 1.2rem;
+}
+
+
+
 .imagePreview {
     display: flex;
 }
 
 .productImage {
-    width: 100px; 
+    width: 100px;
     height: 100px;
     object-fit: cover;
-    margin: 10px; 
+    margin: 10px;
     border-radius: 8px;
 }
 
-.button {
+.politicsContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    margin: 20px;
+    padding: 15px;
+    
+}
+
+.customButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     background: var(--black-olive);
     font-size: 1rem;
     color: var(--olive);
     margin: 1rem;
     padding: 0.75rem 2rem;
     height: 45px;
-    width: 200px;
+    width: 150px;
     box-sizing: border-box;
     flex-shrink: 0;
     border: 1px solid var(--raw-umber);
@@ -138,6 +173,36 @@ textarea:focus {
     transition: all 0.5s ease;
     cursor: pointer;
     white-space: nowrap;
+    overflow: hidden;
+    
+}
+
+.customButton input {
+    width: 150px;
+}
+
+.customButton:hover {
+    background: var(--olive);
+    color: var(--black-olive);
+}
+
+.button,
+.politicsContainer button {
+    background: var(--black-olive);
+    font-size: 1rem;
+    color: var(--olive);
+    margin: 1rem;
+    padding: 0.75rem 2rem;
+    height: 45px;
+    width: 400px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .button:hover {

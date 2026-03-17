@@ -28,7 +28,8 @@ public class ProductController {
                 request.getDescription(),
                 request.getImages(),
                 request.getCategory(),
-                request.getCharacteristicIds()
+                request.getCharacteristicIds(),
+                request.getPolitics()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
@@ -58,7 +59,8 @@ public class ProductController {
                     request.getDescription(),
                     request.getImages(),
                     request.getCategory(),
-                    request.getCharacteristicIds()
+                    request.getCharacteristicIds(),
+                    request.getPolitics()
             );
             return ResponseEntity.ok(updateProduct);
         }

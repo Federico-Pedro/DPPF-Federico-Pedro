@@ -23,5 +23,7 @@ public class ProductRequest {
     private String category;
     private List<Long> characteristicIds;
 
+    @NotNull(message = "Las politicas son obligatorias")
+    private List<String> politics;
 
 }

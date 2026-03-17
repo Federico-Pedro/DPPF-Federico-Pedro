@@ -65,6 +65,7 @@ function CreateProduct() {
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const [politics, setPolitics] = useState([])
 
 
 
@@ -135,7 +136,8 @@ function CreateProduct() {
                 description: description,
                 images: imageUrls,
                 category: productCategory,
-                characteristicIds: selectedCharacteristics
+                characteristicIds: selectedCharacteristics,
+                politics: politics.map(p => JSON.stringify(p))
             }
 
             let response;
@@ -151,6 +153,8 @@ function CreateProduct() {
                 setDescription('');
                 setProductCategory('');
                 setSelectedFile([]);
+                setCharacteristics([]);
+                setPolitics([]);
             }
 
 
@@ -170,6 +174,18 @@ function CreateProduct() {
     };
 
 
+
+    //FUNCIONES DE POLITICAS DEL PRODUCTO
+    const addPolitic = (e) => {
+        e.preventDefault();
+        setPolitics(prev => [...prev, { title: '', description: '' }])
+    }
+
+    const handlePoliticChange = (index, field, value) => {
+        const updated = [...politics]
+        updated[index][field] = value
+        setPolitics(updated)
+    }
 
 
     return (
@@ -247,12 +263,23 @@ function CreateProduct() {
                 </div>
 
 
-                <label htmlFor="productimages"> Imágenes del producto
-                    <input type="file" multiple
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        id="productimages" />
-                </label>
+                
+                    <div className={styles.imagesContainer}>
+                        Imagenes del producto
+
+                        <label htmlFor="fileInput" className={styles.customButton}>
+                            Subir imagenes
+                            <input
+                                id="fileInput"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                            />
+                        </label>
+
+                    </div>
+                
 
                 {
                     editing && product?.images && selectedFile.length === 0 && (
@@ -285,6 +312,34 @@ function CreateProduct() {
                     )
                 }
 
+
+                <label className={styles.labelImages} htmlFor="productpolicies">
+
+                    {/* POLITICAS DEL PRODUCTO */}
+                    Politicas del producto
+
+                    {politics.map((p, index) => (
+                        <div className={styles.politicsContainer} key={index}>
+
+                            <input
+                                type="text"
+                                value={p.title}
+                                onChange={(e) => handlePoliticChange(index, 'title', e.target.value)}
+                                placeholder="Título"
+                            />
+                            <textarea
+                                value={p.description}
+                                onChange={(e) => handlePoliticChange(index, 'description', e.target.value)}
+                                placeholder="Descripción"
+                            />
+                            <button onClick={() => setPolitics(prev => prev.filter((_, i) => i !== index))}>
+                                Eliminar
+                            </button>
+                        </div>
+                    ))}
+                </label>
+                <button className={styles.button} onClick={addPolitic}>Agregar política</button>
+
                 {success && (
                     <div className={styles.success}>{success}</div>
                 )}
@@ -292,7 +347,7 @@ function CreateProduct() {
                     <div className={styles.error}>{error}</div>
                 )}
 
-                <button className={styles.button} type="submit">{editing ? 'Actualizar producto' : 'Agregar producto'}</button>
+                <button className={styles.button} type="submit">{editing ? 'Actualizar producto' : 'Crear producto'}</button>
             </form >
         </div >
     )
