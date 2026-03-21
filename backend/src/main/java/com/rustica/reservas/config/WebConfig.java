@@ -45,6 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.POST, "/api/users/resend-confirmation").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/characteristics/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reservations").permitAll()
@@ -52,6 +53,9 @@ public class WebConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.POST, "/api/favorites").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/favorites/user/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/favorites/product/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/reviews/**").authenticated()
+
 
 
 

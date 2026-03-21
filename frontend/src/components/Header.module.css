@@ -65,6 +65,7 @@ body {
   text-decoration: none;
   font-size: 2rem;
   font-weight: 500;
+  
   transition: opacity 0.5s ease;
 }
 
@@ -178,10 +179,20 @@ body {
   }
 
   .logo {
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .userName {
+    margin: 10px;
+    font-size: 1.5rem;
+    padding: 1px;
   }
 
   .nav {
     gap: 1rem;
+  }
+
+  .userLoggedContainer {
+    width: 90vw;
   }
 }

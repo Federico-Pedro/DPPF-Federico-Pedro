@@ -31,9 +31,10 @@ public class ReservationService {
 
     public Reservation createReservation(LocalDate date, Long productId, Long userId) {
 
-        if (reservationRepository.existsByDate(date)) {
-            throw new UserAlreadyExistsException("Esta fecha ya se encuentra reservada");
+        if (reservationRepository.existsByDateAndProductId(date, productId)) {
+            throw new UserAlreadyExistsException("Esta fecha ya se encuentra reservada para este producto");
         }
+
 
         Reservation newReservation = new Reservation();
         newReservation.setDate(date);

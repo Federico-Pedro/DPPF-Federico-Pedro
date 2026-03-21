@@ -6,7 +6,7 @@
     flex-direction: column;
     align-items: center;
     overflow: hidden;
-    
+
 }
 
 .searchContainer {
@@ -23,7 +23,7 @@
     border: 1px solid var(--dark-umber);
     border-radius: 8px;
     padding: 5px 50px;
-        
+
 }
 
 
@@ -37,8 +37,8 @@
     font-size: 1.5rem;
     color: var(--jasmine);
     cursor: pointer;
-    
-    }
+
+}
 
 .searchContainer form {
     width: 100%;
@@ -47,7 +47,7 @@
     align-items: center;
     gap: 100px;
     padding: 10px;
-   
+
 }
 
 
@@ -55,31 +55,32 @@
 
 :global(.react-datepicker-wrapper),
 :global(.react-datepicker__input-container) {
-  display: flex !important;
-  align-items: center !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
 :global(.react-datepicker),
 :global(.react-datepicker__header) {
     background-color: var(--black-olive) !important;
-    
-    
+
+
 }
+
 :global(.react-datepicker__navigation-icon) {
-  font-size: 0 !important;
-  width: 20px !important;
-  overflow: visible !important;
+    font-size: 0 !important;
+    width: 20px !important;
+    overflow: visible !important;
 }
 
 :global(.react-datepicker__navigation) {
-  overflow: hidden !important;
-  text-indent: 0 !important;
+    overflow: hidden !important;
+    text-indent: 0 !important;
 }
 
 :global(.react-datepicker__navigation-icon--next)::before,
 :global(.react-datepicker__navigation-icon--previous)::before {
-  border-color: var(--jasmine) !important;
-  top: -5px !important;
+    border-color: var(--jasmine) !important;
+    top: -5px !important;
 }
 
 :global(.react-datepicker [role="rowgroup"]) {
@@ -93,11 +94,13 @@
 }
 
 :global(.react-datepicker-popper) {
-  z-index: 9999 !important;
-  
+    z-index: 9999 !important;
+
 }
 
-input[type="text"], input[type="password"], input[type="email"] {
+input[type="text"],
+input[type="password"],
+input[type="email"] {
     height: 45px;
     flex: 1;
     min-width: 150px;
@@ -114,14 +117,16 @@ input[type="text"], input[type="password"], input[type="email"] {
     font-size: 1rem;
     color: var(--olive);
     margin-bottom: 10px;
-    
+
 }
 
 
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
     outline: none;
     border: 2px solid var(--raw-umber);
-    
+
 }
 
 input:-webkit-autofill {
@@ -199,16 +204,12 @@ input:-webkit-autofill {
 }
 
 
-/* .specialOfferContainer * {
-    border: 1px solid red;
-} */
+
 
 .specialOfferContainer {
     display: flex;
     flex-direction: column;
     background-color: var(--dark-umber);
-
-    display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
@@ -225,6 +226,8 @@ input:-webkit-autofill {
     justify-content: center;
     margin-top: 25px;
     height: 100px;
+    overflow: hidden;
+    width: 150px;
     padding: auto;
 }
 
@@ -238,6 +241,7 @@ input:-webkit-autofill {
 }
 
 .specialCardContainer {
+    width: 75vw;
     gap: 2rem;
     padding: 15px;
     display: flex;
@@ -250,7 +254,7 @@ input:-webkit-autofill {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 500px;
+    width: 75%;
     height: 309px;
     border: 1px solid var(--jasmine);
     margin: 0 40px;
@@ -273,12 +277,22 @@ input:-webkit-autofill {
     box-shadow: 0 2px 10px var(--jasmine);
 }
 
-@media (max-width: 900px)
-{
-.searchContainer form{
+
+.mapContainer {
+    width: 50vw;
+    height: auto;
+    border-radius: 10px;
+
+}
+
+
+
+@media (max-width: 900px) {
+    .searchContainer form {
         flex-direction: column;
 
     }
+
     .search {
         width: 250px;
     }
@@ -286,7 +300,20 @@ input:-webkit-autofill {
     .searchButton {
         width: 150px;
     }
+
+    .specialTitleContainer {
+        overflow: hidden;
+        height: 150px;
+    }
+
+    .specialCardContainer {
+        flex-direction: column;
+        width: 70vw;
+        align-items: center;
+    }
 }
+
+
 
 
 @media (max-width: 768px) {
@@ -309,6 +336,6 @@ input:-webkit-autofill {
         padding: 15px;
     }
 
-    
+
 
 }

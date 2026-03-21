@@ -1,31 +1,45 @@
 .body {
-    margin-top: 250px;
-    display: flex;
+    margin-top: 180px;
+    /* margin-left: 50px; */
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
     font-family:Arial, Helvetica, sans-serif;
     font-weight: 200;
     color: var(--jasmine);
     font-size: 1.5rem;
 }
 
+.title {
+    margin: 0 0 50px 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
 .body form {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin: 50px;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px;
     font-size: 1.2rem;
+}
+.inputContainer {
+    display: flex;
+    /* border:1px solid yellow; */
+    align-items:flex-end;
+    justify-content: center;
+    
 }
 
 label {
     display: flex;
     flex-direction: column;
-    margin: 25px;
+    
 }
 
 textarea {
-    width: 250px;
-    margin-bottom: 50px;
+    width: 350px;
+    
 }
 
 
@@ -34,7 +48,7 @@ textarea {
     background: var(--black-olive);
     font-size: 1rem;
     color: var(--olive);
-    margin: 1rem;
+    margin-right: 100px;
     padding: 0.75rem 2rem;
     height: 45px;
     width: 200px;
@@ -50,4 +64,77 @@ textarea {
 .button:hover {
     background: var(--olive);
     color: var(--black-olive);
+}
+
+table {
+    margin-left: 25px;
+    margin-bottom: 50px;
+   border-collapse: collapse;
+}
+
+.th{
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--olive);
+    width: 200px;
+    padding: 25px 0;
+}
+.cell {
+    font-size: 0.9rem;
+    padding: 8px;
+}
+
+th, td {
+    white-space: nowrap;
+    min-width: 80px;
+    border: 1px solid var(--raw-umber);
+
+}
+
+
+.editButton, .deleteButton, .characteristicButton{
+    text-decoration: none;
+    background: var(--black-olive);
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--olive);
+    height: 30px;
+    width: 100px !important;
+    box-sizing: border-box;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0px 10px;
+    overflow: hidden;
+}
+
+.tableBody{
+    text-align: center;
+    color: white;
+}
+
+.tableIamge {
+    width: 50px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.addCategoryContainer{
+    margin: 20px;
+    /* padding: 20px; */
+    border: 2px solid var(--black-olive);
+    border-radius: 8px;
+    width: 95vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    height: fit-content;
+    
+}
+
+.inputMargin {
+    margin: 15px 25px !important;
 }

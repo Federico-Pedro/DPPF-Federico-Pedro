@@ -7,11 +7,11 @@ import { Navigate } from 'react-router-dom'
 
 
 function Characteristics() {
-    
+
     const { user } = useAuth()
-    if(!user || user.role !== 'admin') return <Navigate to="/" />
-    
-       
+    if (!user || user.role !== 'admin') return <Navigate to="/" />
+
+
     const [characteristics, setCharacteristics] = useState([]);
     const [characteristicName, setCharacteristicName] = useState('')
     const [icon, setIcon] = useState('')
@@ -33,10 +33,9 @@ function Characteristics() {
         fetchCharacteristics();
     }, []);
 
-    
+
 
     const editing = id !== undefined;
-    console.log(editing)
 
     useEffect(() => {
         if (editing) {
@@ -45,7 +44,7 @@ function Characteristics() {
                     const characteristicToEdit = response.data;
                     setCharacteristicName(characteristicToEdit.name || '');
                     setIcon(characteristicToEdit.icon || '');
-                    
+
                 })
                 .catch(error => {
                     console.error('Error fetching charcateristic:', error);
@@ -58,11 +57,11 @@ function Characteristics() {
         setCharacteristicToDelete(characteristic)
     }
 
-     const handleClick = (characteristic) => {
-         setId(characteristic.id)
-        
-         
-     }
+    const handleClick = (characteristic) => {
+        setId(characteristic.id)
+
+
+    }
 
     const data = {
         name: characteristicName,
@@ -76,7 +75,7 @@ function Characteristics() {
         try {
             if (editing) {
                 await axios.put(`http://localhost:8080/api/characteristics/${id}`, data);
-                const response = await axios.get('http://localhost:8080/api/characteristics');setCharacteristics(response.data)
+                const response = await axios.get('http://localhost:8080/api/characteristics'); setCharacteristics(response.data)
             } else {
 
                 const response = await axios.post('http://localhost:8080/api/characteristics', data);
@@ -123,7 +122,9 @@ function Characteristics() {
 
     return (
         <div className={styles.body}>
-            
+            <h2 className={styles.title}>
+                Características
+            </h2>
             <table>
                 <thead className={styles.tableHead}>
                     <tr>
@@ -131,7 +132,7 @@ function Characteristics() {
                         <th className={styles.th}>Nombre</th>
                         <th className={styles.th}>Nombre icono</th>
                         <th className={styles.th}>Icono</th>
-                        <th className={styles.th}>Actions</th>
+                        <th className={styles.th}>Acciones</th>
                     </tr>
                 </thead>
                 <tbody className={styles.tableBody}>
@@ -144,11 +145,11 @@ function Characteristics() {
 
                             <td className={styles.buttonCell}>
                                 <button className={styles.deleteButton} onClick={(e) => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                handleClick(characteristic)
-                                                
-                                                }}>Editar</button>
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleClick(characteristic)
+
+                                }}>Editar</button>
                                 <button className={styles.deleteButton} onClick={() => handleDelete(characteristic)}>Eliminar</button>
 
 

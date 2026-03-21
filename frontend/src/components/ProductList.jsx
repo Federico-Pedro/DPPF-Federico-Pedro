@@ -82,6 +82,31 @@ function ProductList({ filteredResults, propDate }) {
     }, [propDate])
 
 
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+
+        const fetchCategories = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/categories')
+            setCategories((response.data).map(r => r.name))
+
+
+            console.log((response.data).map(r => r.name))
+
+        } catch (error) {
+            console.error('Error al cargar reservas', error);
+        }
+    }
+
+
+
+     fetchCategories();
+    
+      
+    }, [])
+    
+
 
     let filteredProducts;
 
@@ -177,14 +202,16 @@ function ProductList({ filteredResults, propDate }) {
     useEffect(() => {
         const fetchFavorites = async () => {
             try {
+                if(user) {
 
-                //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
-                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
-
-                //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
-                setFavorites(response.data.map(p => p.id))
-
-                console.log("Todos los favoritos: ", response.data)
+                    //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
+                    const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+                    
+                    //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
+                    setFavorites(response.data.map(p => p.id))
+                    
+                    console.log("Todos los favoritos: ", response.data)
+                }
 
             } catch (error) {
                 console.error('Error al cargar favoritos', error);
@@ -211,7 +238,7 @@ function ProductList({ filteredResults, propDate }) {
                 await axios.post(`http://localhost:8080/api/favorites`, favoriteData)
 
                 setFavorites(prev => [...prev, productId])
-                
+
             } catch (error) {
                 console.log(error)
             }
@@ -227,7 +254,31 @@ function ProductList({ filteredResults, propDate }) {
         }
     }
 
-    
+
+
+    const [stats, setStats] = useState([])
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+
+                const response = await axios.get(`http://localhost:8080/api/reviews/stats/all`);
+
+                setStats(response.data)
+
+                console.log("STATS: ", response.data)
+
+            } catch (error) {
+                console.error('Error al cargar favoritos', error);
+            }
+        };
+
+        fetchStats();
+
+    }, []);
+
+
+
     if (showModal) {
         return (
             <div className={styles.modal}>
@@ -255,9 +306,10 @@ function ProductList({ filteredResults, propDate }) {
         <div className={styles.body}>
 
             <div className={styles.filterContainer}>Filtrar:
-                <button className={activeFilters.includes('Individual') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Individual')}>Individual</button>
-                <button className={activeFilters.includes('Doble') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Doble')}>Doble</button>
-                <button className={activeFilters.includes('Multiple') ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick('Multiple')}>Multiple</button>
+
+
+                {categories.map(category => <button className={activeFilters.includes(category) ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick(category)}>{category}</button>)}
+
             </div>
             <div className={styles.counter}>
                 Mostrando {filteredProducts.length} / {products.length} productos
@@ -270,7 +322,7 @@ function ProductList({ filteredResults, propDate }) {
 
                     <div key={product.id} className={styles.card}>
                         <div className={styles.productNameContainer}>
-                            <h3>{product.name}</h3>
+                            <h3 className={styles.cardTitle}>{product.name}</h3>
 
                             {favorites.includes(product.id)
                                 ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
@@ -296,9 +348,19 @@ function ProductList({ filteredResults, propDate }) {
                             </div>
                             <div className={styles.pContainer}>
 
-                                <p>{product.description}</p>
+                                <p className={styles.productDescription}>{product.description}</p>
                             </div>
                         </Link>
+
+                        <div className={styles.stats}>
+                        
+                                Puntaje: {stats[product.id]?.average ? stats[product.id]?.average : "*"} / 5 - - - 
+                            
+                        
+                                Total de valoraciones: {stats[product.id]?.total ? stats[product.id]?.total : "0"}
+                            
+                        </div>
+
                         {user && user.role === 'admin' &&
                             <>
                                 <div className={styles.buttonContainer}>

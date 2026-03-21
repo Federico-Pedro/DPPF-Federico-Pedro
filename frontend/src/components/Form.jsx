@@ -191,7 +191,7 @@ function CreateProduct() {
     return (
         <div className={styles.adminContainer}>
             <div className={styles.titleContainer}>
-                <h2>{editing ? 'Editar Producto' : 'Panel de Administración'}</h2>
+                <h2>{editing ? 'Editar Producto' : 'Cargar producto'}</h2>
             </div>
 
 
@@ -240,7 +240,7 @@ function CreateProduct() {
                     <div className={styles.characteristicsContainer}>
                         {characteristics.map(char => (
 
-                            <label htmlFor={char.id}>{char.name}
+                            <label htmlFor={char.id} className={styles.charLabel}>{char.name}
 
                                 <input
                                     type="checkbox"

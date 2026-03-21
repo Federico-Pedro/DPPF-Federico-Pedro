@@ -996,3 +996,10 @@ truncate table category [42102-232]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select  * from reservations\000d\000aALTER [*]TABLE reservations DROP COLUMN IF EXISTS category"; SQL statement:
 select  * from reservations
 ALTER TABLE reservations DROP COLUMN IF EXISTS category [42000-232]
+2026-03-21 09:17:15.465590-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "delete from reviews where id = 5[*]REVIEWS"; SQL statement:
+delete from reviews where id = 5REVIEWS [42000-232]
+2026-03-21 09:39:15.388337-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM REVIEWS \000d\000adelete [*]from reviews where id = 9"; SQL statement:
+SELECT * FROM REVIEWS 
+delete from reviews where id = 9 [42000-232]

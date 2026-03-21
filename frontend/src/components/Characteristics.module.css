@@ -1,6 +1,18 @@
 .body{
     margin-top: 180px;
-    margin-left: 50px;
+    /* margin-left: 50px; */
+}
+
+.title {
+    margin: 0 0 50px 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    color: var(--jasmine)
+}
+table {
+    margin-bottom: 50px;
+   border-collapse: collapse;
+   margin-left: 25px;
 }
 
 .th{
@@ -8,6 +20,7 @@
     font-weight: bold;
     color: var(--olive);
     width: 200px;
+    padding: 25px 0;
     /* border: 1px solid red; */
 }
 
@@ -32,7 +45,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 50px;
+    margin: 50px 0 0 25px;
     
 }
 .editButton, .deleteButton, .characteristicButton{
@@ -49,7 +62,7 @@
     transition: all 0.5s ease;
     cursor: pointer;
     white-space: nowrap;
-    margin-right: 10px;
+    margin: 0px 10px;
     overflow: hidden;
 }
 

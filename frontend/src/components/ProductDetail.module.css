@@ -24,11 +24,11 @@
     font-size: 2rem;
     line-height: 30px;
     height: 40px;
-    margin: 0 0 10px 0;
+    margin: 10px 0;
     /* padding: 10px 0 10px 0; */
     color: var(--olive);
     overflow: hidden;
-    padding: 0px 8px;
+    padding: 8px 8px;
 
 }
 
@@ -143,6 +143,69 @@
     margin-top: 0;
     margin-right: 100px;
 
+}
+
+.starsContainer {
+    width: 99vw;
+    overflow: hidden;
+    padding-left: 150px;
+    display: flex;
+    color: var(--dark-moss-green);
+    font-size: 1.5rem;
+    justify-content: flex-start;
+
+}
+
+.starsContainer i {
+    transition: all .5s ease-in-out;
+}
+
+.starsContainer i:hover {
+    cursor: pointer;
+    
+
+}
+
+.reviewsContainer{
+    overflow: hidden;
+    height: 350px;
+    
+}
+
+.review {
+    overflow: hidden;
+    
+}
+
+.slider{
+    overflow: hidden;
+    height: auto;
+    margin-bottom: 50px;
+    margin-top: 30px;
+    color: var(--dark-moss-green)
+}
+
+.statsContainer {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    padding: 0 25px;
+}
+
+.reviewTextArea {
+    margin-top: 50px;
+    width: 100% !important;
+    max-width: 500px !important;
+    height: 150px !important;
+    min-width: unset !important;
+}
+
+.reviewImage{
+    width: auto;
+    height: 150px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    margin-top: 25px;
 }
 
 .productDescription {
@@ -273,7 +336,6 @@
 }
 
 textarea {
-    height: 150px;
     flex: 1;
     min-width: 50%;
     max-width: 300px;
@@ -334,6 +396,8 @@ textarea:focus {
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 8888;
 }
+
+
 
 
 

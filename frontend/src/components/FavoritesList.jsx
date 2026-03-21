@@ -92,7 +92,7 @@ function FavoritesTable() {
                             <td className={styles.cell}>{f.characteristics.map(char => (<i className={`bi ${char.icon}`} key={char.id}></i>))}</td>
                             <td className={styles.buttonCell}>
 
-                                <button className={styles.deleteButton} onClick={() => handleClick(f.id)}>Borrar</button>
+                                <button className={styles.deleteButton} onClick={() => handleClick(f.id)}>Eliminar de favoritos</button>
                             </td>
                         </tr>
                     ))}

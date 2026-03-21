@@ -71,7 +71,7 @@ function Body() {
                                         setSuggestions(products.filter(p =>
                                             p.description.toLowerCase().includes(value.toLowerCase())
                                         ))
-                                    
+
                                     } else {
                                         setSuggestions([])
                                         setFiltedredResults('')
@@ -141,6 +141,10 @@ function Body() {
                         <img className={styles.cardImage} src="/rome.jpg" alt="" />
                     </div>
                 </div>
+            </div>
+
+            <div className={styles.mapContainer}>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12691.286394220266!2d-59.138622049999995!3d-37.323053349999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f93a525bcab%3A0xefeadbe86a08d8d5!2sTierra%20de%20Azafranes!5e0!3m2!1ses-419!2sar!4v1773764996482!5m2!1ses-419!2sar" width="100%" height="450" style={{border:0}} allowFullScreen="" loading="lazy"></iframe>
             </div>
         </main>
     );

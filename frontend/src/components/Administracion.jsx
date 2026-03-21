@@ -37,10 +37,10 @@ const Administracion = () => {
   return (
     <div className={styles.adminContainer}>
       <Link to="/form" className={styles.adminButon}>Cargar un producto</Link>
-       <Link to="/userstable" className={styles.adminButon}>Administrar usuarios</Link>
-      <Link to="/table" className={styles.adminButon}>Administrar productos</Link>
-      <Link to="/characteristics" className={styles.adminButon}>Administrar caracteristicas</Link>
-      <Link to="/category" className={styles.adminButon}>Agregar categoría</Link>
+      <Link to="/userstable" className={styles.adminButon}>Administrar Usuarios</Link>
+      <Link to="/table" className={styles.adminButon}>Administrar Productos</Link>
+      <Link to="/characteristics" className={styles.adminButon}>Administrar Caracteristicas</Link>
+      <Link to="/category" className={styles.adminButon}>Administrar Categorías</Link>
 
     </div>
   );

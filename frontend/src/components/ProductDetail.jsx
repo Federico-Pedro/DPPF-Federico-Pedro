@@ -8,6 +8,9 @@ import DatePicker from 'react-datepicker'
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import { es } from 'date-fns/locale/es';
 import { useNavigate } from 'react-router-dom'
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 registerLocale('es', es)
 
 
@@ -21,16 +24,23 @@ const ProductDetail = () => {
     const [share, setShare] = useState(false)
     const [shareMessage, setShareMessage] = useState('')
     const [copied, setCopied] = useState(false)
+    const [hovered, setHovered] = useState(0)
+    const [reviews, setReviews] = useState([])
+    const [review, setReview] = useState('')
+    const [reviewComment, setReviewComment] = useState('')
+    const [reviewMessage, setReviewMessage] = useState('')
+    const [stats, setStats] = useState([])
+    const [reviewByUser, setReviewByUser] = useState([])
     const { id } = useParams();
     const { user } = useAuth()
     const navigate = useNavigate()
-    
+
 
     useEffect(() => {
         axios.get(`http://localhost:8080/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
-                console.log(response.data)
+                //console.log(response.data)
             })
             .catch(error => {
                 console.error('Error fetching product:', error);
@@ -42,18 +52,30 @@ const ProductDetail = () => {
                 const [year, month, day] = date.split('-')
                 const d = new Date(year, month - 1, day)
                 d.setHours(12, 0, 0, 0)
+                //console.log(response.data)
                 return d
             })))
             .catch(error => setError(error));
 
+        fetchReviewData();
+
     }, [id]);
 
+    const fetchReviewData = () => {
+        axios.get(`http://localhost:8080/api/reviews/product/${id}`)
+            .then(response => setReviews(response.data))
+
+        axios.get(`http://localhost:8080/api/reviews/product/${id}/stats`)
+            .then(response => setStats(response.data))
+
+        if (user) {
+            axios.get(`http://localhost:8080/api/reviews/product/${id}/user/${user.id}`)
+                .then(response => setReviewByUser(response.data))
+        }
+    }
 
 
-
-    // console.log("Fechas reservadas para este producto: ", reservedDates)
-
-    const handleSubmit = async (e) => {
+    const handleReserve = async (e) => {
         e.preventDefault();
         if (!user) {
             setError('Debes iniciar sesión para hacer una reserva');
@@ -77,16 +99,16 @@ const ProductDetail = () => {
         }
     }
 
-    // const fetchData = () => {
-    //     setError(false)
-    //     axios.get(`http://localhost:8080/api/products/${id}`)
-    //         .then(response => setProduct(response.data))
-    //         .catch(() => setError(true))
-    // }
+    const fetchData = () => {
+        setError(false)
+        axios.get(`http://localhost:8080/api/products/${id}`)
+            .then(response => setProduct(response.data))
+            .catch(() => setError(true))
+    }
 
-    // useEffect(() => {
-    //     fetchData()
-    // }, [id])
+    useEffect(() => {
+        fetchData()
+    }, [id])
 
 
     const [favorites, setFavorites] = useState([])
@@ -97,18 +119,19 @@ const ProductDetail = () => {
             try {
 
                 //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
-                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+                if (user) {
+                    const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
 
-                //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
-                setFavorites(response.data.map(p => p.id))
+                    //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
+                    setFavorites(response.data.map(p => p.id))
 
-                console.log("Todos los favoritos: ", response.data)
+                    //console.log("Todos los favoritos: ", response.data)
 
+                }
             } catch (error) {
                 console.error('Error al cargar favoritos', error);
             }
         };
-
         fetchFavorites();
 
     }, []);
@@ -142,8 +165,52 @@ const ProductDetail = () => {
         }
     }
 
+
+
+    const handleReview = async (star) => {
+
+        try {
+            setReview(star)
+
+
+        } catch (error) {
+
+            console.log(error)
+        }
+    }
+
+
+    const submitReview = async () => {
+
+        //console.log("ENVIANDO RESEÑA")
+        try {
+            const data = {
+                userId: user.id,
+                productId: product.id,
+                rating: review,
+                comment: reviewComment,
+                date: new Date().toISOString().split('T')[0]
+            }
+            await axios.post(`http://localhost:8080/api/reviews/product/${product.id}`, data)
+            setReviewMessage('Reseña creada con éxito')
+            setReviewComment('')
+
+            setTimeout(() => {
+                closeModal()
+                fetchReviewData()
+            }, 3000)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
+
     const closeModal = () => {
         setShare(false)
+        setReview('')
         setCopied(false)
     }
 
@@ -156,6 +223,21 @@ const ProductDetail = () => {
     }
     const shareText = `${product.name}\n\n${product.description}\n\n${shareMessage}`
 
+
+    // SETTINGS PARA EL SLIDER DE LAS REVIEWS
+    const settings = {
+        dots: true,
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        speed: 1500,
+        autoplaySpeed: 6000,
+        cssEase: "linear"
+    }
+
+
+
     return (
         <div className={styles.container}>
             <div className={styles.titleContainer}>
@@ -165,11 +247,13 @@ const ProductDetail = () => {
                     <h1>{product.name}</h1>
 
                     <div>
-
-                        {favorites.includes(product.id)
-                            ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
-                            : <i className="bi bi-heart" onClick={() => handleFavorite(product.id)}></i>
+                        
+                        {
+                            favorites.includes(product.id)
+                                ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
+                                : <i className="bi bi-heart" onClick={() => handleFavorite(product.id)}></i>
                         }
+
 
                         <i className={"bi bi-share"} onClick={() => setShare(true)}></i>
 
@@ -212,7 +296,7 @@ const ProductDetail = () => {
                                     Elige una red social para compartir: "{product.name}"
                                 </h3>
                                 {copied && <p>Contenido copiado, podés pegarlo en Instagram</p>}
-                                
+
                             </div>
                             <div className={styles.iconContainter}>
                                 <i
@@ -236,10 +320,10 @@ const ProductDetail = () => {
 
                 }
 
-
-
-
             </div>
+
+
+            {/* IMAGENES DEL PRODUCTO */}
             <div className={styles.imageContainer}>
                 {product.images && product.images.length > 0 && product.images.map((image, index) => (
                     <img
@@ -261,11 +345,80 @@ const ProductDetail = () => {
                     <p>Ver mas</p>
                 </Link>
             </div>
+
+            {/* VALORAR PRODUCTO */}
+            <div className={styles.starsContainer}>
+
+                {(user && !reviewByUser) ? [1, 2, 3, 4, 5].map(star => (
+                    <i
+                        key={star}
+                        className={star <= hovered ? "bi bi-star-fill" : "bi bi-star"}
+                        onMouseEnter={() => setHovered(star)}
+                        onMouseLeave={() => setHovered(0)}
+                        onClick={() => handleReview(star)}
+                    />
+                )) : (user && reviewByUser) ? [1, 2, 3, 4, 5].map(star => (
+                    <i
+                        key={star}
+                        className={star <= reviewByUser.rating ? "bi bi-star-fill" : "bi bi-star"}
+                        style={{ cursor: 'default' }}
+                    />
+                )) : <></>
+
+                }
+
+
+                {/* REVIEW MODAL */}
+
+                {review && !reviewByUser && (
+                    <div className={styles.overlay}>
+                        <div className={styles.shareModal}>
+                            <div className={styles.shareModalTitle}>
+                                <h2 className={styles.reviewTitle}>
+                                    {product.name}
+                                </h2>
+                                <i className="bi bi-x" onClick={() => closeModal()}></i>
+                            </div>
+                            <img src={product.images[0]} alt="Imagen del producto" className={styles.reviewImage} />
+                            <div>
+                                {user && [1, 2, 3, 4, 5].map(star => (
+                                    <i
+                                        key={star}
+                                        className={star <= review ? "bi bi-star-fill" : "bi bi-star"}
+                                    />
+                                ))}
+                            </div>
+                            <textarea
+                                className={styles.reviewTextArea}
+                                placeholder="Ingresa un comentario"
+                                rows={5}
+                                onChange={(e) => setReviewComment(e.target.value)}
+                                value={reviewComment}
+                            >
+                            </textarea>
+                            <h5>{reviewMessage}</h5>
+
+
+                            {!reviewByUser && (<button className={styles.button} onClick={() => submitReview()}>Enviar reseña</button>)}
+
+                        </div>
+                    </div>
+                )
+
+                }
+
+            </div>
+
+            {/* DESCRIPCION DEL PRODUCTO */}
             <div className={styles.productDescription}>
 
                 <p>{product.description}</p>
             </div>
+
+            {/* CARACTERISTICAS DEL PRODUCTO */}
             <div className={`${styles.productDescription} ${styles.productCharacteristics}`}>
+
+
                 <h3>Características</h3>
 
                 <div className={styles.iconsContainer}>
@@ -280,6 +433,8 @@ const ProductDetail = () => {
                 </div>
 
             </div>
+
+            {/* POLITICAS DEL PRODUCTO */}
             <div className={`${styles.productDescription} ${styles.productCharacteristics}`}>
                 <h3 className={styles.politicsTitle}>Políticas del producto</h3>
                 <div className={styles.politicsContainer}>
@@ -293,6 +448,38 @@ const ProductDetail = () => {
                             </div>
                         )
                     })}
+
+                </div>
+            </div>
+
+            {/* RESEÑAS DEL PRODUCTO */}
+
+            <div className={`${styles.productDescription} ${styles.productCharacteristics}`}>
+                <h3 className={styles.politicsTitle}>Reseñas</h3>
+                <div className={styles.reviewsContainer}>
+
+                    <Slider {...settings} className={styles.slider}>
+                        {reviews.map(review => (
+                            <div key={review.id} className={styles.review}>
+                                <p>{review.user.name} {review.user.lastName}</p>
+                                <p>{review.date}</p>
+                                <p>{review.comment}</p>
+                                <div>
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                        <i key={star} className={star <= review.rating ? "bi bi-star-fill" : "bi bi-star"}></i>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </Slider>
+
+                    <div className={styles.statsContainer}>
+
+                        <p>Puntaje: {stats.average ? stats.average : "*"}/5</p>
+                        <p>Total de valoraciones: {stats.total ? stats.total : "0"}</p>
+                    </div>
+
+
 
                 </div>
             </div>
@@ -315,7 +502,7 @@ const ProductDetail = () => {
                     <button className={styles.button} onClick={fetchData}>Reintentar</button>
                 </div>
             }
-            <button type="button" className={styles.button} onClick={handleSubmit}>Reservar</button>
+            <button type="button" className={styles.button} onClick={handleReserve}>Reservar</button>
         </div>
     );
 };

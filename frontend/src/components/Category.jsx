@@ -1,8 +1,8 @@
 import styles from './Category.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom';
-import { Navigate, useNavigate } from 'react-router-dom'
+
+import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const Category = () => {
@@ -10,18 +10,23 @@ const Category = () => {
   const { user } = useAuth()
   if (!user || user.role !== 'admin') return <Navigate to="/" />
 
-  const { id } = useParams();
 
-  const editing = id !== undefined;
 
-  const [categories, setCategories] = useState('')
+
+  const [categories, setCategories] = useState([])
   const [category, setCategory] = useState('')
   const [categoryName, setCategoryName] = useState('')
+  const [categoryToDelete, setCategoryToDelete] = useState(null)
   const [description, setDescription] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedFile, setSelectedFile] = useState([])
+  const [selectedFile, setSelectedFile] = useState('')
   const [error, setError] = useState('')
+  const [showModal, setShowModal] = useState(false);
 
+  const [id, setId] = useState(undefined)
+
+
+  const editing = id !== undefined;
   useEffect(() => {
     if (editing) {
       axios.get(`http://localhost:8080/api/categories/${id}`)
@@ -59,7 +64,7 @@ const Category = () => {
   const uploadImages = async (files) => {
     const formData = new FormData();
     files.forEach(file => {
-        formData.append('files', file);
+      formData.append('files', file);
     });
     try {
       const response = await axios.post('http://localhost:8080/api/upload', formData, {
@@ -104,10 +109,11 @@ const Category = () => {
 
     try {
       let imageUrl = [];
-      if (selectedFile) {
+
+      if (selectedFile.length > 0) {
         imageUrl = await uploadImages(selectedFile)
       } else if (editing && category?.image) {
-        imageUrl = category.image
+        imageUrl = [category.image]
       }
 
 
@@ -118,18 +124,18 @@ const Category = () => {
 
       }
 
-      let response;
-
       if (editing) {
-        response = await axios.put(`http://localhost:8080/api/categories/${id}`, categoryData);
+        await axios.put(`http://localhost:8080/api/categories/${id}`, categoryData);
+        const response = await axios.get('http://localhost:8080/api/categories'); setCategories(response.data)
 
-        navigate('/administracion')
+
       } else {
-        response = await axios.post('http://localhost:8080/api/categories', categoryData);
+        const response = await axios.post('http://localhost:8080/api/categories', categoryData);
+        setCategories(prev => [...prev, response.data])
 
         setCategoryName('');
         setDescription('');
-        setSelectedFile([]);
+        setSelectedFile('');
       }
 
 
@@ -142,45 +148,140 @@ const Category = () => {
     }
   }
 
+  const handleDelete = (category) => {
+    setShowModal(true);
+    setCategoryToDelete(category)
+  }
+
+  const handleEdit = (category) => {
+    setId(category.id)
 
 
+  }
 
+  const cancelDelete = () => {
+    setShowModal(false);
+    setCategoryToDelete(null)
+  }
 
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/api/categories/${categoryToDelete.id}`);
+      setShowModal(false)
 
+      setCategories(prev => prev.filter(c => c.id !== categoryToDelete.id))
+      setCategoryToDelete(null)
+    }
+    catch (error) {
+      console.error("Se produjo un error: ", error)
+    }
+  }
 
-
+  if (showModal) {
+    return (
+      <div style={{ textAlign: 'center', padding: '200px', color: 'white' }}>
+        <h2>¿Está seguro que desea eliminar esta categoría: {categoryToDelete.name}?</h2>
+        <p>Todos los productos asociados a ella podrían ser eliminados</p>
+        <div>
+          <button className={styles.deleteButton} onClick={() => confirmDelete()}>Eliminar</button>
+          <button className={styles.deleteButton} onClick={() => cancelDelete()}>Cancelar</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
+
     <div className={styles.body}>
-      Agregar categoría
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <label htmlFor="categoryName"> Categoria
-          <input type="text"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            placeholder="Nombre de la categoría"
-            id="categoryName" />
-        </label>
+      <h2 className={styles.title}>
+        Categorías
+      </h2>
+      <table>
+        <thead className={styles.tableHead}>
+          <tr>
+            <th className={styles.th}>ID</th>
+            <th className={styles.th}>Nombre</th>
+            <th className={styles.th}>Imagen</th>
+            <th className={styles.th}>Descripcion</th>
+            <th className={styles.th}>Accciones</th>
+          </tr>
+        </thead>
+        <tbody className={styles.tableBody}>
+          {categories.map(cat => (
+            <tr key={cat.id}>
+              <td className={styles.cell}>{cat.id}</td>
+              <td className={styles.cell}>{cat.name}</td>
+              <td className={styles.cell}><img className={styles.tableIamge} src={cat.image} alt="" /></td>
+              <td className={styles.cell}>{cat.description}</td>
 
-        <label htmlFor="description"> Descripción
-          <textarea
-            value={description}
-            rows="4"
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Descripción"
-            id="description"></textarea>
-        </label>
+              <td className={styles.buttonCell}>
+                <button className={styles.deleteButton} onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handleEdit(cat)
 
-        <label htmlFor="categoryImage">
-          <input type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            id="categoryImage"
-          />
-        </label>
+                }}>Editar</button>
+                <button className={styles.deleteButton} onClick={() => handleDelete(cat)}>Eliminar</button>
 
-        <button className={styles.button} type="submit">{editing ? 'Actualizar categoría' : 'Agregar categorìa'}</button>
-      </form>
+
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div className={styles.addCategoryContainer}>
+
+        <form className={styles.form} onSubmit={handleSubmit}>
+
+          <div className={styles.inputContainer}>
+
+            <label htmlFor="categoryName"> Categoria
+              <input type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                placeholder="Nombre de la categoría"
+                id="categoryName"
+                className={styles.inputMargin} />
+            </label>
+
+            <label htmlFor="description"> Descripción
+              <textarea
+                value={description}
+                rows="4"
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Descripción"
+                id="description"
+                className={styles.inputMargin}></textarea>
+            </label>
+
+            <label htmlFor="categoryImage">
+              <input type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                id="categoryImage"
+                className={styles.inputMargin}
+              />
+            </label>
+          </div>
+
+          <button className={styles.button} type="submit">{editing ? 'Actualizar categoría' : 'Agregar categorìa'}</button>
+        </form>
+      </div>
     </div>
   )
 }

@@ -43,6 +43,10 @@
     overflow: hidden;
 }
 
+.deleteButton {
+    width:fit-content
+}
+
 
 .editButton:hover,
 .deleteButton:hover {
@@ -88,3 +92,4 @@ i {
 }
     
 }
+

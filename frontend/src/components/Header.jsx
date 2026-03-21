@@ -35,7 +35,7 @@ function Header() {
           {user ? (
             <div className={styles.userLoggedContainer}>
               {user.role === 'admin' && (<Link to="/administracion" className={styles.link}>Admin</Link>)}
-              <Link to="/Profile" className={styles.link}><span className={styles.userName}>{inicial}</span></Link>
+              {user.role !== 'admin' && (<Link to="/Profile" className={styles.link}><span className={styles.userName}>{inicial}</span></Link>)}
               <Link to="/favorites" className={styles.favorites}><i className="bi bi-heart"></i><h2 className={styles.favoritesTitle}>Favoritos</h2></Link>
               <button onClick={handleLogout} className={styles.logout}>Cerrar sesión</button>
             </div>
