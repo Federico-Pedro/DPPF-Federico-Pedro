@@ -46,6 +46,10 @@
     /* border: 1px solid red; */
 }
 
+.loginMessage {
+    color: var(--dark-moss-green)
+}
+
 .label {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/Header' 
+import Header from './components/Header'
 import Body from './components/Body'
 import Footer from './components/Footer'
 import Administracion from './components/Administracion'
@@ -14,35 +14,44 @@ import UsersTable from './components/UsersTable'
 import Characteristics from './components/Characteristics'
 import Category from './components/Category'
 import FavoritesList from './components/FavoritesList'
+import Reserves from './components/Reserves'
+import { WhatsAppWidget } from 'react-whatsapp-widget'
+import 'react-whatsapp-widget/dist/index.css'
+
+
+// import WhatsappLogo from './components/WhatsappLogo'
 
 import './App.css'
- 
+
 function App() {
-  
+
   return (
-     
-      <BrowserRouter>
+
+    <BrowserRouter>
       <Header />
       <Routes>
-      <Route path="/" element={<Body />} />
-      <Route path="/administracion" element={<Administracion />} />
-      <Route path="/form" element={<Form />} />
-      <Route path="/table" element={<ProductsTable />} />
-      <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/productGallery/:id" element={<ProductGallery />} />
-      <Route path="/form/edit/:id" element={<Form />} />
-      <Route path="/registrationForm" element={<RegistrationForm />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/usersTable" element={<UsersTable />} />
-      <Route path="/characteristics" element={<Characteristics />} />
-      <Route path="/category" element={<Category />} />
-      <Route path="/favorites" element={<FavoritesList />} />
-      
+        <Route path="/" element={<Body />} />
+        <Route path="/administracion" element={<Administracion />} />
+        <Route path="/form" element={<Form />} />
+        <Route path="/table" element={<ProductsTable />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/productGallery/:id" element={<ProductGallery />} />
+        <Route path="/form/edit/:id" element={<Form />} />
+        <Route path="/registrationForm" element={<RegistrationForm />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/usersTable" element={<UsersTable />} />
+        <Route path="/characteristics" element={<Characteristics />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/favorites" element={<FavoritesList />} />
+        <Route path="/reserves" element={<Reserves />} />
+
       </Routes>
+      {/* <WhatsappLogo /> */}
+      <WhatsAppWidget companyName="Rústica" phoneNumber="542494216514" message="Hola! ¿En qué te puedo ayudar?" replyTimeText="" CompanyIcon={() => <img src="/logo.png" alt="icon"  />} />
       <Footer />
-      </BrowserRouter>
-    
+    </BrowserRouter>
+
   )
 }
 

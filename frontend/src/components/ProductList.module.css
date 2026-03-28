@@ -198,7 +198,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     box-sizing: border-box;
-
+    overflow: hidden;
 
 }
 
@@ -321,7 +321,7 @@
     color: var(--jasmine)
 }
 
-@media (max-width: 999px) {
+@media (max-width: 1024px) {
 
     .titleContainer {
         margin: 0
@@ -351,11 +351,7 @@
         width: 80%;
     }
 
-    .filterContainer {
-        flex-direction: column;
-        margin: 1px;
-        align-items: center;
-    }
+    
 
     .filterButton {
         margin: 8px;
@@ -380,4 +376,3 @@
     }
 }
 
-/* Achicar la fuente de las cards a partir de 700px aprox */

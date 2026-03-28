@@ -27,7 +27,7 @@ public class ProductController {
                 request.getName(),
                 request.getDescription(),
                 request.getImages(),
-                request.getCategory(),
+                request.getCategoryIds(),
                 request.getCharacteristicIds(),
                 request.getPolitics()
         );
@@ -58,7 +58,7 @@ public class ProductController {
                 request.getName(),
                     request.getDescription(),
                     request.getImages(),
-                    request.getCategory(),
+                    request.getCategoryIds(),
                     request.getCharacteristicIds(),
                     request.getPolitics()
             );

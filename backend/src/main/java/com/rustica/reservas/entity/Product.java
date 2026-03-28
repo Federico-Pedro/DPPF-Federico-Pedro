@@ -32,9 +32,6 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = true;
 
-    @Column
-    private String category;
-
     @ManyToMany
     @JoinTable(
             name = "product_characteristics",

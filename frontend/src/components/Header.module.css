@@ -65,7 +65,7 @@ body {
   text-decoration: none;
   font-size: 2rem;
   font-weight: 500;
-  
+
   transition: opacity 0.5s ease;
 }
 
@@ -159,6 +159,106 @@ body {
   color: var(--raw-umber);
 }
 
+.hamburger {
+  display: none;
+}
+
+.mobileMenu {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+
+
+@media (max-width: 1024px) {
+
+  .open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    width: 150px;
+    height: auto;
+    background-color: var(--black-olive);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--raw-umber);
+    border-radius: 8px;
+  }
+
+  .link, .favorites, .logout  {
+    margin: 5px;
+  }
+
+
+  .closeBtn {
+    margin:0;
+    padding:0;
+    font-size: 3rem;
+    cursor: pointer;
+    color: white;
+    
+  }
+
+  .hamburger {
+    display: block;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+
+
+  .userLoggedContainer {
+    display: none;
+  }
+
+
+  .header {
+    max-height: 250px;
+    position: fixed;
+    z-index: 999999
+  }
+
+  .subContainer {
+    justify-content: start;
+    align-items: center;
+  }
+
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .userName {
+    margin: 10px;
+    font-size: 1.5rem;
+    padding: 1px;
+  }
+
+  .nav {
+    gap: 1rem;
+  }
+
+  .userLoggedContainer {
+    width: 90vw;
+  }
+}
+
+
+
+
+
+
 @media (max-width: 768px) {
 
   .header {
@@ -167,11 +267,6 @@ body {
     z-index: 999999
   }
 
-  .container {
-    flex-direction: column;
-    gap: 1rem;
-
-  }
 
   .subContainer {
     justify-content: center;
@@ -192,7 +287,5 @@ body {
     gap: 1rem;
   }
 
-  .userLoggedContainer {
-    width: 90vw;
-  }
+  
 }

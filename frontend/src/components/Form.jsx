@@ -24,7 +24,8 @@ function CreateProduct() {
                     setProduct(product)
                     setProductName(product.name || '');
                     setDescription(product.description || '');
-                    setProductCategory(product.category || '');
+
+                    setSelectedCategories(product.categories?.map(c => c.id) || [])
                     setSelectedCharacteristics(product.characteristics.map(char => char.id) || [])
 
                 })
@@ -61,12 +62,14 @@ function CreateProduct() {
     const [productCategory, setProductCategory] = useState('')
     const [selectedCharacteristics, setSelectedCharacteristics] = useState([])
     const [characteristics, setCharacteristics] = useState([])
+    const [selectedCategories, setSelectedCategories] = useState([])
     const [categories, setCategories] = useState([])
     const [selectedFile, setSelectedFile] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const [politics, setPolitics] = useState([])
 
+    const token = localStorage.getItem('token')
 
 
     const uploadImages = async (files) => {
@@ -80,7 +83,8 @@ function CreateProduct() {
         try {
             const response = await axios.post('http://localhost:8080/api/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
                 }
             });
 
@@ -116,8 +120,8 @@ function CreateProduct() {
             setError('Debe agregar al menos una caracteristica');
             return;
         }
-        if (!productCategory) {
-            setError('La categoría es obligaroria');
+        if (selectedCategories.length === 0) {
+            setError('La categoría es obligatoria');
             return;
         }
 
@@ -135,7 +139,7 @@ function CreateProduct() {
                 name: productName,
                 description: description,
                 images: imageUrls,
-                category: productCategory,
+                categoryIds: selectedCategories,
                 characteristicIds: selectedCharacteristics,
                 politics: politics.map(p => JSON.stringify(p))
             }
@@ -143,17 +147,23 @@ function CreateProduct() {
             let response;
             console.log(productData)
             if (editing) {
-                response = await axios.put(`http://localhost:8080/api/products/${id}`, productData);
+                response = await axios.put(`http://localhost:8080/api/products/${id}`, productData,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
                 setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
                 navigate('/table')
             } else {
-                response = await axios.post('http://localhost:8080/api/products', productData);
+                response = await axios.post('http://localhost:8080/api/products', productData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setSuccess(`Producto "${response.data.name}" creado exitosamente!`);
                 setProductName('');
                 setDescription('');
                 setProductCategory('');
                 setSelectedFile([]);
-                setCharacteristics([]);
+                setSelectedCharacteristics([]);
                 setPolitics([]);
             }
 
@@ -220,19 +230,29 @@ function CreateProduct() {
                     <label className={styles.titleContainer}>Categoría del producto</label>
 
                     <div className={styles.categoryContainer}>
+
+
                         {categories.map(c => (
-                            <label htmlFor={c.name}>
+                            <label key={c.id} htmlFor={c.id}>
                                 <input
-                                    type="radio"
+                                    type="checkbox"
                                     id={c.id}
-                                    name={c.name}
-                                    value={c.name}
-                                    checked={productCategory === c.name}
-                                    onChange={(e) => setProductCategory(e.target.value)}
+                                    value={c.id}
+                                    checked={selectedCategories.includes(c.id)}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value)
+                                        if (e.target.checked) {
+                                            setSelectedCategories(prev => [...prev, value])
+                                        } else {
+                                            setSelectedCategories(prev => prev.filter(id => id !== value))
+                                        }
+                                    }}
                                 />
                                 {c.name}
                             </label>
                         ))}
+
+
 
                     </div>
 
@@ -263,23 +283,24 @@ function CreateProduct() {
                 </div>
 
 
-                
-                    <div className={styles.imagesContainer}>
-                        Imagenes del producto
 
-                        <label htmlFor="fileInput" className={styles.customButton}>
-                            Subir imagenes
-                            <input
-                                id="fileInput"
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={handleFileChange}
-                            />
-                        </label>
+                <div className={styles.imagesContainer}>
+                    Imagenes del producto
 
-                    </div>
-                
+                    <label htmlFor="fileInput" className={styles.customButton}>
+                        Subir imagenes
+                        <input
+                            id="fileInput"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                    </label>
+
+                </div>
+
 
                 {
                     editing && product?.images && selectedFile.length === 0 && (

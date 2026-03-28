@@ -21,6 +21,9 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Column(nullable = true)
+    private LocalDate creationDate;
+
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

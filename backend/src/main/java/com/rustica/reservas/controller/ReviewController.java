@@ -63,6 +63,9 @@ public class ReviewController {
             @PathVariable Long productId,
             @PathVariable Long userId) {
         Review review = reviewService.getReviewByProductAndUser(productId, userId);
+        if (review == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(review);
     }
 

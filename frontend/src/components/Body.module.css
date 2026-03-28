@@ -287,9 +287,17 @@ input:-webkit-autofill {
 
 
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
+
+    .searchContainer {
+        width: 80vw;
+    }
+
     .searchContainer form {
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem
 
     }
 

@@ -18,6 +18,7 @@ registerLocale('es', es)
 const ProductDetail = () => {
     const [product, setProduct] = useState(null);
     const [selectedDate, setSelectedDate] = useState('')
+    const [formatedDate, setFormatedDate] = useState('')
     const [reservedDates, setReservedDates] = useState([])
     const [success, setSuccess] = useState('')
     const [error, setError] = useState('')
@@ -30,10 +31,27 @@ const ProductDetail = () => {
     const [reviewComment, setReviewComment] = useState('')
     const [reviewMessage, setReviewMessage] = useState('')
     const [stats, setStats] = useState([])
-    const [reviewByUser, setReviewByUser] = useState([])
+    const [reviewByUser, setReviewByUser] = useState(null)
+    const [reserveModal, setReserveModal] = useState(false)
     const { id } = useParams();
     const { user } = useAuth()
     const navigate = useNavigate()
+
+
+
+    // FUNCION Y USEEFFECT PARA FORMATEAR LA FECHA SELECCIONADA
+
+    const formatDate = (date) => {
+        const [year, month, day] = new Date(date).toISOString().split('T')[0].split('-')
+        return `${day}/${month}/${year}`
+    }
+
+    useEffect(() => {
+        if (selectedDate) {
+            setFormatedDate(formatDate(selectedDate))
+        }
+
+    }, [selectedDate])
 
 
     useEffect(() => {
@@ -46,22 +64,30 @@ const ProductDetail = () => {
                 console.error('Error fetching product:', error);
             });
 
-        //TRAE TODAS LAS FECHAS EN QUE ESTE PRODUCTO SE ENCUENTRA RESERVADO
+
+        getReservedDates();
+        fetchReviewData();
+
+
+    }, [id]);
+
+
+    //TRAE TODAS LAS FECHAS EN QUE ESTE PRODUCTO SE ENCUENTRA RESERVADO
+    const getReservedDates = () => {
         axios.get(`http://localhost:8080/api/reservations/product/${id}`)
             .then(response => setReservedDates(response.data.map(date => {
                 const [year, month, day] = date.split('-')
                 const d = new Date(year, month - 1, day)
                 d.setHours(12, 0, 0, 0)
-                //console.log(response.data)
+                // console.log(response.data)
                 return d
             })))
-            .catch(error => setError(error));
+            .catch(error => setError(error.response?.data?.message || 'Error al cargar las fechas reservadas'));
+    }
 
-        fetchReviewData();
-
-    }, [id]);
-
+    // TRAE REVIEWS DEL PRODUCTO Y STATS
     const fetchReviewData = () => {
+
         axios.get(`http://localhost:8080/api/reviews/product/${id}`)
             .then(response => setReviews(response.data))
 
@@ -71,28 +97,52 @@ const ProductDetail = () => {
         if (user) {
             axios.get(`http://localhost:8080/api/reviews/product/${id}/user/${user.id}`)
                 .then(response => setReviewByUser(response.data))
+                .catch(error => {
+                    if (error.response?.status !== 404) {
+                        console.error(error)
+                    }
+
+                })
         }
     }
 
 
-    const handleReserve = async (e) => {
-        e.preventDefault();
-        if (!user) {
-            setError('Debes iniciar sesión para hacer una reserva');
-            return;
-        }
+    const openReserveModal = () => {
         if (!selectedDate) {
             setError('Debes seleccionar una fecha');
             return;
         }
+        if (user) {
+            setReserveModal(true)
+        } else {
+            setError('Debes iniciar sesión para hacer una reserva, redirigiendo al login en 2s');
+            setTimeout(() => {
+                navigate("/login")
+            }, 2000);
+            return;
+        }
+    }
+
+    const handleReserve = async (e) => {
+        e.preventDefault();
+
+
         try {
             const reservationData = {
                 date: selectedDate,
+                creationDate: new Date().toISOString().split('T')[0],
                 productId: product.id,
                 userId: user.id
             }
             const response = await axios.post('http://localhost:8080/api/reservations', reservationData);
             setSuccess(`Reserva de "${response.data.product.name}" para el día: "${response.data.date}" creada exitosamente!`);
+            setSelectedDate('')
+            setSuccess('')
+            setTimeout(() => {
+                closeModal()
+            }, 3000);
+            getReservedDates();
+
         } catch (error) {
             console.error(error);
             setError('Error al crear la reserva')
@@ -167,7 +217,7 @@ const ProductDetail = () => {
 
 
 
-    const handleReview = async (star) => {
+    const handleReview = (star) => {
 
         try {
             setReview(star)
@@ -182,7 +232,6 @@ const ProductDetail = () => {
 
     const submitReview = async () => {
 
-        //console.log("ENVIANDO RESEÑA")
         try {
             const data = {
                 userId: user.id,
@@ -212,6 +261,7 @@ const ProductDetail = () => {
         setShare(false)
         setReview('')
         setCopied(false)
+        setReserveModal(false)
     }
 
     if (!product) {
@@ -247,7 +297,7 @@ const ProductDetail = () => {
                     <h1>{product.name}</h1>
 
                     <div>
-                        
+
                         {
                             favorites.includes(product.id)
                                 ? <i className="bi bi-heart-fill" onClick={() => handleFavorite(product.id)}></i>
@@ -483,6 +533,13 @@ const ProductDetail = () => {
 
                 </div>
             </div>
+            <div className={styles.reservationMessage}>
+                <p>
+                    Elija una fecha para hacer la reserva
+                </p>
+
+
+            </div>
 
             <DatePicker
                 placeholderText="Seleccionar fecha"
@@ -492,17 +549,107 @@ const ProductDetail = () => {
                 monthsShown={2}
                 dateFormat="dd/MM/yyyy"
                 excludeDates={reservedDates}
-
+                minDate={new Date()}
+                highlightDates={[new Date()]}
                 inline
             />
-            {success && <h3 className={styles.success}>{success}</h3>}
+
+
+            {/* MODAL DE RESERVAS */}
+            {user && reserveModal && (
+                <div className={styles.overlay}>
+                    <div className={` ${styles.reserveModal}`}>
+                        <div className={styles.reserveTitleContainer}>
+                            <h2 className={styles.reserveTitle}>
+                                Reserva: {product.name}
+                            </h2>
+                            <i className="bi bi-x" onClick={() => closeModal()}></i>
+                        </div>
+                        <div className={styles.grid}>
+                            <div className={styles.reserveInfoContainer}>
+                                <div>
+                                    {product.description}
+                                </div>
+                                <img
+                                    className={styles.reserveImage}
+                                    src={product.images[0]}
+                                    alt=""
+                                />
+                                <div className={styles.mapContainer}>
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12691.286394220266!2d-59.138622049999995!3d-37.323053349999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f93a525bcab%3A0xefeadbe86a08d8d5!2sTierra%20de%20Azafranes!5e0!3m2!1ses-419!2sar!4v1773764996482!5m2!1ses-419!2sar" width="100%" height="100%" style={{ border: 0 }} allowFullScreen="" loading="lazy"></iframe>
+                                </div>
+
+                                <div className={styles.starContainer}>
+                                    <div>
+                                        {[1, 2, 3, 4, 5].map(star => (
+                                            <i key={star} className={star <= stats.average ? "bi bi-star-fill" : "bi bi-star"}></i>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        Puntuación:  {stats.average} / 5
+                                    </div>
+                                    <div>
+                                        Total de valoraciones: {stats.total}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <form className={styles.reserveForm}>
+                                <label>
+                                    Nombre de usuario:
+                                    <input type="text"
+                                        name=""
+                                        id=""
+                                        value={`${user.name} ${user.lastName}`}
+                                        readOnly
+                                    />
+                                </label>
+                                <label>
+                                    Email:
+                                    <input type="text"
+                                        name=""
+                                        id=""
+                                        value={user.email}
+                                        readOnly
+                                    />
+                                </label>
+                                <label>
+                                    Mesa:
+                                    <input
+                                        type="text"
+                                        name=""
+                                        id=""
+                                        value={product.name} readOnly />
+                                </label>
+                                <label>
+                                    Fecha:
+                                    <input
+                                        type="text"
+                                        name=""
+                                        id=""
+                                        value={formatedDate} readOnly />
+                                </label>
+                                <div className={styles.buttonContainer}>
+                                    <button className={styles.reserveButton} onClick={handleReserve}>Confirmar reserva</button>
+                                    <button className={`${styles.reserveButton} ${styles.cancelButton}`}
+                                        onClick={() => closeModal()}
+                                    >Cancelar</button>
+                                </div>
+                            </form>
+                            {success && <h3 className={styles.success}>{success}</h3>}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {error &&
-                <div>
+                <div className={styles.errorContainer}>
                     <h3 className={styles.error}>{error}</h3>
-                    <button className={styles.button} onClick={fetchData}>Reintentar</button>
+
                 </div>
             }
-            <button type="button" className={styles.button} onClick={handleReserve}>Reservar</button>
+            {error ? <button className={styles.button} onClick={fetchData}>Reintentar</button> : <button type="button" className={styles.button} onClick={openReserveModal}>Reservar</button>}
+
         </div>
     );
 };

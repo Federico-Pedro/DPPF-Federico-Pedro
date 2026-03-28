@@ -8,6 +8,7 @@ import com.rustica.reservas.exception.UserAlreadyExistsException;
 import com.rustica.reservas.repository.ProductRepository;
 import com.rustica.reservas.repository.ReservationRepository;
 import com.rustica.reservas.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,15 +22,17 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    public ReservationService(ReservationRepository reservationRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ProductRepository productRepository, UserRepository userRepository, EmailService emailService) {
         this.reservationRepository = reservationRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
 
     }
 
-    public Reservation createReservation(LocalDate date, Long productId, Long userId) {
+    public Reservation createReservation(LocalDate date, LocalDate creationDate, Long productId, Long userId) {
 
         if (reservationRepository.existsByDateAndProductId(date, productId)) {
             throw new UserAlreadyExistsException("Esta fecha ya se encuentra reservada para este producto");
@@ -46,8 +49,20 @@ public class ReservationService {
 
         newReservation.setProduct(product);
         newReservation.setUser(user);
+        newReservation.setCreationDate(creationDate);
 
         Reservation savedReservation = reservationRepository.save(newReservation);
+
+        try {
+            emailService.sendReservationConfirmationEmail(
+                    user.getName(),
+                    user.getEmail(),
+                    product.getName(),
+                    date
+            );
+        } catch (MessagingException e) {
+            System.err.println("Error al enviar email: " + e.getMessage());
+        }
 
         return savedReservation;
     }
@@ -59,6 +74,10 @@ public class ReservationService {
     public Reservation getReservationById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+    }
+
+    public List<Reservation> getReservationsByUserId(Long userId) {
+        return reservationRepository.findByUserId(userId);
     }
 
     public Reservation updateReservation(Long id, LocalDate date, Product product, User user) {

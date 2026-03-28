@@ -4,6 +4,7 @@ import com.rustica.reservas.dto.LoginRequest;
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.service.EmailService;
 import com.rustica.reservas.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,7 +104,13 @@ public class UserController {
 
         System.out.println(email);
         User user = userService.getUserByEmail(email);
-        emailService.sendConfirmationEmail(user.getName(), user.getEmail());
+
+        try {
+            emailService.sendConfirmationEmail(user.getName(), email);
+        } catch (MessagingException e) {
+            System.err.println("Error al enviar email de confirmación: " + e.getMessage());
+        }
+
         return ResponseEntity.ok().build();
     }
 

@@ -12,6 +12,9 @@ public class ReservationRequest {
     @NotNull(message = "La fecha es obligatoria")
     private LocalDate date;
 
+    @NotNull(message = "La fecha es obligatoria")
+    private LocalDate creationDate;
+
     @NotNull(message = "El producto es obliogatorio")
     private Long productId;
 

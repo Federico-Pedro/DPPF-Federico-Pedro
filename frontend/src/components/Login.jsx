@@ -62,6 +62,7 @@ const Login = () => {
 
     return (
         <div className={styles.adminContainer}>
+            <p className={styles.loginMessage}>El login es obligatorio, en caso de no estar registrado clikear en "Crear cuenta"</p>
             <div className={styles.titleContainer}>
                 <h2>Login</h2>
             </div>

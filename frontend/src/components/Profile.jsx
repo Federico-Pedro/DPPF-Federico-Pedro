@@ -65,6 +65,9 @@ const Profile = () => {
                     <Link to="/registrationForm">
                         <button className={styles.button}>Editar información</button>
                     </Link>
+                    <Link to="/reserves">
+                        <button className={styles.button}>Historial de reservas</button>
+                    </Link>
                     <button onClick={() => setIsOpen(true)} className={styles.button}>Eliminar usuario</button>
                     <button onClick={handleLogout} className={styles.button}>Cerrar sesión</button>
                 </div>

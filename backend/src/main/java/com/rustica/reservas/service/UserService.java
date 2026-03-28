@@ -3,6 +3,7 @@ package com.rustica.reservas.service;
 import com.rustica.reservas.entity.User;
 import com.rustica.reservas.repository.UserRepository;
 import com.rustica.reservas.util.JwtUtil;
+import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.rustica.reservas.service.EmailService;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,12 @@ public class UserService {
 
 
         User savedUser = userRepository.save(newUser);
-        emailService.sendConfirmationEmail(name, email);
+
+        try {
+            emailService.sendConfirmationEmail(name, email);
+        } catch (MessagingException e) {
+            System.err.println("Error al enviar email de confirmación: " + e.getMessage());
+        }
 
         return savedUser;
     }

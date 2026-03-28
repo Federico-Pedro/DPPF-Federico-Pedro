@@ -7,6 +7,7 @@ const Footer = () => {
         <img className={styles.logo} src="/public/logo.png" alt="Logo" />
         <h4 className={styles.copyright}>2025 - Federico Pedro ©</h4>
         </div>
+         
         </div>
   )
 }

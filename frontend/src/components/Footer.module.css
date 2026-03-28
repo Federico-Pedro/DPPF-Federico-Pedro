@@ -3,19 +3,21 @@
     width: 99vw;
     padding: 15px;
     display: flex;
-    
-    
-    
+    justify-content: space-between;
+
+
+
 }
 
-.logoContainer{
+.logoContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+    margin-left: 50px;
+
 }
 
-.logo{
+.logo {
     width: 50px;
     height: 50px;
     margin-right: 25px;
@@ -23,13 +25,25 @@
 
 .copyright {
     text-align: center;
-    
+
+}
+
+.whatsapp {
+    font-size: 3rem;
+    color: var(--dark-moss-green);
+    position: 'fixed';
+    bottom: '24px';
+    right: '24px';
+    z-index: 9999;
 }
 
 @media (max-width: 768px) {
-    .logoContainer, .footer {
-    display: flex;
-    flex-direction: column;   
-    align-items: center;
-}
+
+    .logoContainer,
+    .footer {
+        justify-content: center;
+        margin: 0;
+        margin-top: 20px;
+        padding: 0;
+    }
 }

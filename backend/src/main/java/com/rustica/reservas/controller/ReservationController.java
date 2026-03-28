@@ -31,6 +31,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationRequest request) {
         Reservation createdReservation = reservationService.createReservation(
                 request.getDate(),
+                request.getCreationDate(),
                 request.getProductId(),
                 request.getUserId()
         );
@@ -50,7 +51,11 @@ public class ReservationController {
         return ResponseEntity.ok(reservation);
     }
 
-
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Reservation>> getReservationsByUser(@PathVariable Long userId) {
+        List<Reservation> reservations = reservationService.getReservationsByUserId(userId);
+        return ResponseEntity.ok(reservations);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Reservation> updateReservation(

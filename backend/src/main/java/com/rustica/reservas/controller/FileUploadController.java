@@ -26,7 +26,7 @@ public class FileUploadController {
             "image/webp"
     );
 
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
 
     private void validateFile(MultipartFile file) {
 

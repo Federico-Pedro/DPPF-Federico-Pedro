@@ -19,8 +19,9 @@ public class ProductRequest {
     @NotEmpty(message = "Debe agregar al menos una imagen")
     private List<String> images;
 
-    @NotBlank(message = "La categoría es obligatoria")
-    private String category;
+    @NotEmpty(message = "La categoría es obligatoria")
+    private List<Long> categoryIds;
+
     private List<Long> characteristicIds;
 
     @NotNull(message = "Las politicas son obligatorias")

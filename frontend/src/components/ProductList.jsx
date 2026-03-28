@@ -87,25 +87,23 @@ function ProductList({ filteredResults, propDate }) {
     useEffect(() => {
 
         const fetchCategories = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/categories')
-            setCategories((response.data).map(r => r.name))
+            try {
+                const response = await axios.get('http://localhost:8080/api/categories')
+                setCategories(response.data)
 
 
-            console.log((response.data).map(r => r.name))
-
-        } catch (error) {
-            console.error('Error al cargar reservas', error);
+            } catch (error) {
+                console.error('Error al cargar reservas', error);
+            }
         }
-    }
 
 
 
-     fetchCategories();
-    
-      
+        fetchCategories();
+
+
     }, [])
-    
+
 
 
     let filteredProducts;
@@ -126,10 +124,10 @@ function ProductList({ filteredResults, propDate }) {
         //LUEGO CONTINUA CON EL FILTRADO POR PALABRAS CLAVE Y POR BOTONES DE FILTROS SEGUN CARACTERISTICAS
 
         if (filteredResults && (activeFilters.length > 0)) {
-            return filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => activeFilters.includes(p.category))
+            return filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase())).filter(p => p.categories.some(c => activeFilters.includes(c.name)))
 
         } else if (!filteredResults && (activeFilters.length > 0)) {
-            return filteredProducts = filteredProducts.filter(p => activeFilters.includes(p.category))
+            return filteredProducts = filteredProducts.filter(p => p.categories.some(c => activeFilters.includes(c.name)))
 
         } else if (filteredResults) {
             return filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filteredResults.toLowerCase()))
@@ -202,14 +200,14 @@ function ProductList({ filteredResults, propDate }) {
     useEffect(() => {
         const fetchFavorites = async () => {
             try {
-                if(user) {
+                if (user) {
 
                     //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
                     const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
-                    
+
                     //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
                     setFavorites(response.data.map(p => p.id))
-                    
+
                     console.log("Todos los favoritos: ", response.data)
                 }
 
@@ -305,10 +303,17 @@ function ProductList({ filteredResults, propDate }) {
     return (
         <div className={styles.body}>
 
-            <div className={styles.filterContainer}>Filtrar:
+            <div className={styles.filterContainer}>
 
-
-                {categories.map(category => <button className={activeFilters.includes(category) ? styles.clickedButton : styles.filterButton} onClick={() => handleFilterClick(category)}>{category}</button>)}
+                {categories.map(category => (
+                    <button
+                        key={category.id}
+                        className={activeFilters.includes(category.name) ? styles.clickedButton : styles.filterButton}
+                        onClick={() => handleFilterClick(category.name)}
+                    >
+                        {category.name}
+                    </button>
+                ))}
 
             </div>
             <div className={styles.counter}>
@@ -353,12 +358,12 @@ function ProductList({ filteredResults, propDate }) {
                         </Link>
 
                         <div className={styles.stats}>
-                        
-                                Puntaje: {stats[product.id]?.average ? stats[product.id]?.average : "*"} / 5 - - - 
-                            
-                        
-                                Total de valoraciones: {stats[product.id]?.total ? stats[product.id]?.total : "0"}
-                            
+
+                            Puntaje: {stats[product.id]?.average ? stats[product.id]?.average : "*"} / 5 - - -
+
+
+                            Total de valoraciones: {stats[product.id]?.total ? stats[product.id]?.total : "0"}
+
                         </div>
 
                         {user && user.role === 'admin' &&
