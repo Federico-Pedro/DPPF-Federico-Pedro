@@ -68,19 +68,16 @@ cd DPPF-Federico-Pedro
 cd backend
 ```
 
-#### Configurar variables de entorno:
-```bash
-touch .env
-```
 
-#### Archivo `.env`:
-```dotenv
-# JWT
-JWT_SECRET=clave_supersecreta
 
-# Mail
-MAIL_USERNAME=tucuenta@gmail.com
-MAIL_PASSWORD=tu_password
+#### Archivo `.application.properties`:
+//COPIAR EL ARCHIVO application.properties.example Y RENOMBRARLO COMO application.properties CONFIGURANDO LAS VARIABLES INDICADAS EN ÉL
+
+| Variable        | Descripción                                      |
+|-----------------|--------------------------------------------------|
+| MAIL_USERNAME   | Email desde el que se envían las notificaciones  |
+| MAIL_PASSWORD   | Contraseña de aplicación del email               |
+| JWT_SECRET      | Clave secreta para firmar los tokens JWT         |
 ```
 
 #### Correr el backend:
@@ -103,27 +100,64 @@ npm install
 npm run dev
 ```
 
+#### Archivo `.env`:
+Creá un archivo `.env` en la carpeta `/frontend` con el siguiente contenido:
+
+| Variable        | Descripción                        |
+|-----------------|------------------------------------|
+| VITE_API_URL    | URL base del backend               |
+
+#### Valor por defecto:
+```dotenv
+VITE_API_URL=http://localhost:8080
+```
+
 > La aplicación estará disponible en `http://localhost:5173`
 
 ---
 
 ## 📬 Endpoints (API REST)
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| POST | /api/auth/register | Registro de usuario | ❌ |
-| POST | /api/auth/login | Login y generación de JWT | ❌ |
-| GET | /api/reservas | Listado de reservas del usuario | ✅ |
-| POST | /api/reservas | Crear una reserva | ✅ |
-| DELETE | /api/reservas/{id} | Cancelar una reserva | ✅ |
-
-> 📌 Completar con los endpoints reales del proyecto
+| Método | Endpoint                                       | Descripción                                   | Auth         |
+|--------|------------------------------------------------|-----------------------------------------------|--------------|
+| POST   | /api/users                                     | Registro de usuario                           | ❌           |
+| POST   | /api/users/login                               | Login y generación de JWT                     | ❌           |
+| POST   | /api/users/resend-confirmation                 | Reenvío de email de confirmación              | ❌           |
+| GET    | /api/products                                  | Listado de productos                          | ❌           |
+| GET    | /api/products/{id}                             | Detalle de producto                           | ❌           |
+| POST   | /api/products                                  | Crear producto                                | ✅ (ADMIN)   |
+| PUT    | /api/products/{id}                             | Editar producto                               | ✅ (ADMIN)   |
+| DELETE | /api/products/{id}                             | Eliminar producto                             | ✅ (ADMIN)   |
+| GET    | /api/categories                                | Listado de categorías                         | ❌           |
+| POST   | /api/categories                                | Crear categoría                               | ✅           |
+| GET    | /api/characteristics                           | Listado de características                    | ❌           |
+| GET    | /api/reservations                              | Listado de reservas                           | ❌           |
+| GET    | /api/reservations/{id}                         | Detalle de reserva                            | ❌           |
+| GET    | /api/reservations/user/{userId}                | Reservas de un usuario                        | ✅           |
+| GET    | /api/reservations/product/{productId}          | Fechas reservadas de un producto              | ❌           |
+| POST   | /api/reservations                              | Crear reserva                                 | ✅           |
+| POST   | /api/favorites                                 | Agregar favorito                              | ✅           |
+| GET    | /api/favorites/user/{userId}                   | Favoritos de un usuario                       | ✅           |
+| DELETE | /api/favorites/product/{productId}             | Eliminar favorito                             | ✅           |
+| GET    | /api/reviews                                   | Listado de reviews                            | ❌           |
+| GET    | /api/reviews/product/{productId}               | Reviews de un producto                        | ❌           |
+| GET    | /api/reviews/product/{productId}/stats         | Estadísticas de un producto                   | ❌           |
+| GET    | /api/reviews/stats/all                         | Estadísticas de todos los productos           | ❌           |
+| GET    | /api/reviews/product/{productId}/user/{userId} | Review de un usuario para un producto         | ❌           |
+| POST   | /api/reviews/product/{productId}               | Crear review                                  | ✅           |
+| DELETE | /api/reviews/{id}                              | Eliminar review                               | ✅           |
 
 ---
 
 ## 🗂️ Diagrama de entidades (ER)
 
 <img src="./frontend/public/Rustica.png" alt="Diagrama de entidades" width="300">
+
+---
+
+## ☁️ Deploy
+
+🚧 En construcción — el deploy está pendiente para una próxima etapa del proyecto.
 
 ---
 

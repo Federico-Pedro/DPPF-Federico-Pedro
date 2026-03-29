@@ -17,7 +17,7 @@ function FavoritesTable() {
     useEffect(() => {
         const fetchFavorites = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${user.id}`);
 
                 setFavorites(response.data)
 
@@ -39,7 +39,7 @@ function FavoritesTable() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/favorites/product/${favoriteToDelete}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/favorites/product/${favoriteToDelete}`);
             setShowModal(false)
             setFavorites(prev => prev.filter(f => f.id !== favoriteToDelete))
             setFavoriteToDelete(null)
@@ -88,7 +88,7 @@ function FavoritesTable() {
                         <tr key={f.id}>
                             <td className={styles.cell}>{f.id}</td>
                             <td className={styles.cell}>{f.name}</td>
-                            <td className={styles.cell}>{f.category}</td>
+                            <td className={styles.cell}>{f.categories.map(cat => cat.name)}</td>
                             <td className={styles.cell}>{f.characteristics.map(char => (<i className={`bi ${char.icon}`} key={char.id}></i>))}</td>
                             <td className={styles.buttonCell}>
 

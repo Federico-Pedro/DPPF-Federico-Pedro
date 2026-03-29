@@ -61,12 +61,12 @@ const RegistrationForm = () => {
             let response;
 
             if (editing) {
-                response = await axios.put(`http://localhost:8080/api/users/${user.email}`, userData);
+                response = await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${user.email}`, userData);
                 login(response.data)
                 setSuccess(`Usuario: "${response.data.name}" actualizado exitosamente`)
             } else {
                 console.log("Creando")
-                response = await axios.post('http://localhost:8080/api/users', userData);
+                response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, userData);
                 setSuccess(`Usuario: "${response.data.name}" creado exitosamente!`);
                 setName('');
                 setLastName('');

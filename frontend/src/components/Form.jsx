@@ -18,7 +18,7 @@ function CreateProduct() {
 
     useEffect(() => {
         if (editing) {
-            axios.get(`http://localhost:8080/api/products/${id}`)
+            axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
                 .then(response => {
                     const product = response.data;
                     setProduct(product)
@@ -41,8 +41,8 @@ function CreateProduct() {
         const fetchData = async () => {
             try {
                 const [categoriesRes, characteristicsRes] = await Promise.all([
-                    axios.get('http://localhost:8080/api/categories'),
-                    axios.get('http://localhost:8080/api/characteristics')
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/categories`),
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/characteristics`)
                 ]);
                 setCategories(categoriesRes.data);
                 setCharacteristics(characteristicsRes.data);
@@ -81,7 +81,7 @@ function CreateProduct() {
         });
 
         try {
-            const response = await axios.post('http://localhost:8080/api/upload', formData, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`
@@ -147,7 +147,7 @@ function CreateProduct() {
             let response;
             console.log(productData)
             if (editing) {
-                response = await axios.put(`http://localhost:8080/api/products/${id}`, productData,
+                response = await axios.put(`${import.meta.env.VITE_API_URL}/api/products/${id}`, productData,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
@@ -155,7 +155,7 @@ function CreateProduct() {
                 setSuccess(`Producto "${response.data.name}" actualizado exitosamente`)
                 navigate('/table')
             } else {
-                response = await axios.post('http://localhost:8080/api/products', productData, {
+                response = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setSuccess(`Producto "${response.data.name}" creado exitosamente!`);

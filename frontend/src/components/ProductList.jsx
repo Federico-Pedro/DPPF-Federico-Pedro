@@ -31,7 +31,7 @@ function ProductList({ filteredResults, propDate }) {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/products');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 setProducts(response.data)
                 const random = getRandomProducts(response.data);
@@ -58,7 +58,7 @@ function ProductList({ filteredResults, propDate }) {
     //EL FILTRO SIIGUIENTE
     const fetchReservations = async () => {
         try {
-            const reserves = await axios.get('http://localhost:8080/api/reservations')
+            const reserves = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservations`)
             const formattedDate = propDate ? propDate.toISOString().split('T')[0] : null
 
             const filtered = reserves.data.filter(r => r.date === formattedDate)
@@ -88,7 +88,7 @@ function ProductList({ filteredResults, propDate }) {
 
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/categories')
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`)
                 setCategories(response.data)
 
 
@@ -174,7 +174,7 @@ function ProductList({ filteredResults, propDate }) {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/products/${productToDelete.id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${productToDelete.id}`);
             setShowModal(false)
             setProductToDelete(null)
             setProducts(products.filter(p => p.id !== productToDelete.id));
@@ -203,7 +203,7 @@ function ProductList({ filteredResults, propDate }) {
                 if (user) {
 
                     //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
-                    const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${user.id}`);
 
                     //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
                     setFavorites(response.data.map(p => p.id))
@@ -233,7 +233,7 @@ function ProductList({ filteredResults, propDate }) {
                     productId: productId,
                     userId: user.id
                 }
-                await axios.post(`http://localhost:8080/api/favorites`, favoriteData)
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/favorites`, favoriteData)
 
                 setFavorites(prev => [...prev, productId])
 
@@ -243,7 +243,7 @@ function ProductList({ filteredResults, propDate }) {
         } else {
             try {
 
-                await axios.delete(`http://localhost:8080/api/favorites/product/${productId}`)
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/favorites/product/${productId}`)
                 setFavorites(prev => prev.filter(id => id !== productId))
 
             } catch (error) {
@@ -260,7 +260,7 @@ function ProductList({ filteredResults, propDate }) {
         const fetchStats = async () => {
             try {
 
-                const response = await axios.get(`http://localhost:8080/api/reviews/stats/all`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/stats/all`);
 
                 setStats(response.data)
 

@@ -29,7 +29,7 @@ const Category = () => {
   const editing = id !== undefined;
   useEffect(() => {
     if (editing) {
-      axios.get(`http://localhost:8080/api/categories/${id}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/api/categories/${id}`)
         .then(response => {
           const category = response.data;
           setCategory(category)
@@ -48,7 +48,7 @@ const Category = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/categories');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
         setCategories(response.data)
 
       } catch (error) {
@@ -67,7 +67,7 @@ const Category = () => {
       formData.append('files', file);
     });
     try {
-      const response = await axios.post('http://localhost:8080/api/upload', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -125,12 +125,12 @@ const Category = () => {
       }
 
       if (editing) {
-        await axios.put(`http://localhost:8080/api/categories/${id}`, categoryData);
-        const response = await axios.get('http://localhost:8080/api/categories'); setCategories(response.data)
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/categories/${id}`, categoryData);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`); setCategories(response.data)
 
 
       } else {
-        const response = await axios.post('http://localhost:8080/api/categories', categoryData);
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/categories`, categoryData);
         setCategories(prev => [...prev, response.data])
 
         setCategoryName('');
@@ -166,7 +166,7 @@ const Category = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/categories/${categoryToDelete.id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/categories/${categoryToDelete.id}`);
       setShowModal(false)
 
       setCategories(prev => prev.filter(c => c.id !== categoryToDelete.id))

@@ -16,6 +16,8 @@ registerLocale('es', es)
 
 
 const ProductDetail = () => {
+
+    const token = localStorage.getItem('token')
     const [product, setProduct] = useState(null);
     const [selectedDate, setSelectedDate] = useState('')
     const [formatedDate, setFormatedDate] = useState('')
@@ -55,7 +57,7 @@ const ProductDetail = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/products/${id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
                 //console.log(response.data)
@@ -74,7 +76,7 @@ const ProductDetail = () => {
 
     //TRAE TODAS LAS FECHAS EN QUE ESTE PRODUCTO SE ENCUENTRA RESERVADO
     const getReservedDates = () => {
-        axios.get(`http://localhost:8080/api/reservations/product/${id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/reservations/product/${id}`)
             .then(response => setReservedDates(response.data.map(date => {
                 const [year, month, day] = date.split('-')
                 const d = new Date(year, month - 1, day)
@@ -88,14 +90,14 @@ const ProductDetail = () => {
     // TRAE REVIEWS DEL PRODUCTO Y STATS
     const fetchReviewData = () => {
 
-        axios.get(`http://localhost:8080/api/reviews/product/${id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/product/${id}`)
             .then(response => setReviews(response.data))
 
-        axios.get(`http://localhost:8080/api/reviews/product/${id}/stats`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/product/${id}/stats`)
             .then(response => setStats(response.data))
 
         if (user) {
-            axios.get(`http://localhost:8080/api/reviews/product/${id}/user/${user.id}`)
+            axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/product/${id}/user/${user.id}`)
                 .then(response => setReviewByUser(response.data))
                 .catch(error => {
                     if (error.response?.status !== 404) {
@@ -134,7 +136,9 @@ const ProductDetail = () => {
                 productId: product.id,
                 userId: user.id
             }
-            const response = await axios.post('http://localhost:8080/api/reservations', reservationData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/reservations`, reservationData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setSuccess(`Reserva de "${response.data.product.name}" para el día: "${response.data.date}" creada exitosamente!`);
             setSelectedDate('')
             setSuccess('')
@@ -151,7 +155,7 @@ const ProductDetail = () => {
 
     const fetchData = () => {
         setError(false)
-        axios.get(`http://localhost:8080/api/products/${id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
             .then(response => setProduct(response.data))
             .catch(() => setError(true))
     }
@@ -170,7 +174,9 @@ const ProductDetail = () => {
 
                 //ESTE ENDPOINT TRAE LOS FAVORITOS CORRESPONDIENTES AL USUARIO LOGGEADO
                 if (user) {
-                    const response = await axios.get(`http://localhost:8080/api/favorites/user/${user.id}`);
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${user.id}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
 
                     //SETEA LOS ID DE LOS PRODUCTOS QUE EL USUARIO MARCÓ COMO FAVORITOS
                     setFavorites(response.data.map(p => p.id))
@@ -196,7 +202,9 @@ const ProductDetail = () => {
                     productId: productId,
                     userId: user.id
                 }
-                await axios.post(`http://localhost:8080/api/favorites`, favoriteData)
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/favorites`, favoriteData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
 
                 setFavorites(prev => [...prev, productId])
 
@@ -206,7 +214,9 @@ const ProductDetail = () => {
         } else {
             try {
 
-                await axios.delete(`http://localhost:8080/api/favorites/product/${productId}`)
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/favorites/product/${productId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
                 setFavorites(prev => prev.filter(id => id !== productId))
 
             } catch (error) {
@@ -240,7 +250,9 @@ const ProductDetail = () => {
                 comment: reviewComment,
                 date: new Date().toISOString().split('T')[0]
             }
-            await axios.post(`http://localhost:8080/api/reviews/product/${product.id}`, data)
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/reviews/product/${product.id}`, data, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
             setReviewMessage('Reseña creada con éxito')
             setReviewComment('')
 

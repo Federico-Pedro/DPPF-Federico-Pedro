@@ -19,7 +19,7 @@ const Profile = () => {
 
     const handleDelete = async (e) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/users/${user.email}`);
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${user.email}`);
             logout();
             navigate('/')
             console.log(response)

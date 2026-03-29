@@ -16,7 +16,7 @@ function ProductsTable() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/products');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
                 
                 setProducts(response.data)
                 
@@ -39,7 +39,7 @@ function ProductsTable() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/products/${productToDelete.id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${productToDelete.id}`);
             setShowModal(false)
             setProductToDelete(null)
             setProducts(products.filter(p => p.id !== productToDelete.id));

@@ -16,13 +16,13 @@ function Reserves() {
     useEffect(() => {
     const fetchReserves = async () => {
         try {
-            const res = await axios.get(`http://localhost:8080/api/reservations/user/${user.id}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservations/user/${user.id}`);
             const sorted = res.data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             const reservationsWithReviews = await Promise.all(
                 sorted.map(async (reserve) => {
                     try {
-                        const rev = await axios.get(`http://localhost:8080/api/reviews/product/${reserve.product.id}/user/${user.id}`)
+                        const rev = await axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/product/${reserve.product.id}/user/${user.id}`)
                         return { ...reserve, review: rev.data }
                     } catch {
                         return { ...reserve, review: "Sin valoraciones" }

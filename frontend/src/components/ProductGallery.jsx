@@ -12,7 +12,7 @@ const ProductGallery = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/products/${id}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
                 console.log(response.data);

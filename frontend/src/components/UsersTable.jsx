@@ -16,7 +16,7 @@ function UsersTable() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/users');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`);
                 setUsers(response.data)
 
             } catch (error) {
@@ -37,7 +37,7 @@ function UsersTable() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/users/${userToDelete.email}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userToDelete.email}`);
             setShowModal(false)
             setUserToDelete(null)
             
@@ -56,7 +56,7 @@ function UsersTable() {
     const changeRole = async (userToUpdate) => {
     try {
         const newRole = userToUpdate.role === 'admin' ? 'user' : 'admin'
-        await axios.put(`http://localhost:8080/api/users/${userToUpdate.email}`, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userToUpdate.email}`, {
             name: userToUpdate.name,
             lastName: userToUpdate.lastName,
             password: userToUpdate.password,

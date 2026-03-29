@@ -22,7 +22,7 @@ function Characteristics() {
     useEffect(() => {
         const fetchCharacteristics = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/characteristics');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/characteristics`);
                 setCharacteristics(response.data)
 
             } catch (error) {
@@ -39,7 +39,7 @@ function Characteristics() {
 
     useEffect(() => {
         if (editing) {
-            axios.get(`http://localhost:8080/api/characteristics/${id}`)
+            axios.get(`${import.meta.env.VITE_API_URL}/api/characteristics/${id}`)
                 .then(response => {
                     const characteristicToEdit = response.data;
                     setCharacteristicName(characteristicToEdit.name || '');
@@ -74,11 +74,11 @@ function Characteristics() {
         e.preventDefault();
         try {
             if (editing) {
-                await axios.put(`http://localhost:8080/api/characteristics/${id}`, data);
-                const response = await axios.get('http://localhost:8080/api/characteristics'); setCharacteristics(response.data)
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/characteristics/${id}`, data);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/characteristics`); setCharacteristics(response.data)
             } else {
 
-                const response = await axios.post('http://localhost:8080/api/characteristics', data);
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/characteristics`, data);
                 setCharacteristics(prev => [...prev, response.data])
             }
         }
@@ -89,7 +89,7 @@ function Characteristics() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/characteristics/${characteristicToDelete.id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/characteristics/${characteristicToDelete.id}`);
             setShowModal(false)
             setCharacteristicToDelete(null)
 
