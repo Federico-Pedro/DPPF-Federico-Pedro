@@ -6,6 +6,13 @@ iluminación y musicalización, específicamente seleccionadas para realzar la e
 
 ---
 
+## Screenshots
+
+<img src="./frontend/public/Screenshot from 2026-03-29 16-14-46.png" alt="Logo Rústica" width="300">
+<img src="./frontend/public/Screenshot from 2026-03-29 16-15-05.png" alt="Logo Rústica" width="300">
+
+---
+
 ## 🎨 Paleta de colores
 
 ![Paleta de colores](./frontend/public/paleta.png)
